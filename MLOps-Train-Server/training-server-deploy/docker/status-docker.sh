@@ -13,7 +13,7 @@ if [[ -f "${SCRIPT_DIR}/.env" ]]; then
   set +a
 fi
 
-DETECTOR_CONTAINER="${DETECTOR_CONTAINER:-intellivix-detector-agent}"
+DETECTOR_CONTAINER="${DETECTOR_CONTAINER:-detector-agent}"
 AGENT_PORT="${AGENT_PORT:-9010}"
 HEALTH_URL="http://127.0.0.1:${AGENT_PORT}/api/v1/health"
 HEALTH_WAIT_ATTEMPTS="${HEALTH_WAIT_ATTEMPTS:-30}"

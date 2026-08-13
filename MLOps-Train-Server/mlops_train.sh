@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Intellivix_MLops_train_server/mlops_train.sh — Detector + VLM training agent 빌드/실행/상태 확인
+# mlops-train-server/mlops_train.sh — Detector + VLM training agent 빌드/실행/상태 확인
 
 set -euo pipefail
 
@@ -7,8 +7,8 @@ ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 DETECTOR_DEPLOY="${ROOT}/training-server-deploy/docker"
 VLM_DEPLOY="${ROOT}/training-server-vlm-deploy/docker"
 
-DETECTOR_CONTAINER="${DETECTOR_CONTAINER:-intellivix-detector-agent}"
-VLM_CONTAINER="${VLM_CONTAINER:-intellivix-vlm-agent}"
+DETECTOR_CONTAINER="${DETECTOR_CONTAINER:-detector-agent}"
+VLM_CONTAINER="${VLM_CONTAINER:-vlm-agent}"
 DETECTOR_PORT="${DETECTOR_PORT:-9010}"
 VLM_PORT="${VLM_PORT:-9011}"
 FOLLOW_LOGS=1

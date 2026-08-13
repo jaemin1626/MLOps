@@ -1,7 +1,7 @@
 FROM pytorch/pytorch:2.3.1-cuda12.1-cudnn8-runtime
 
-LABEL org.opencontainers.image.title="Intellivix Detector Training Server Agent" \
-      org.opencontainers.image.description="REST API agent for YOLO detector training on Intellivix_MLops_train_server workspace"
+LABEL org.opencontainers.image.title="MLOps Detector Training Server Agent" \
+      org.opencontainers.image.description="REST API agent for YOLO detector training on mlops-train-server workspace"
 
 WORKDIR /app
 

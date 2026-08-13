@@ -6,7 +6,7 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "${SCRIPT_DIR}/paths.sh"
 resolve_training_docker_paths "${BASH_SOURCE[0]}"
 
-DETECTOR_IMAGE="${DETECTOR_IMAGE:-intellivix-detector-agent:1.0.0}"
+DETECTOR_IMAGE="${DETECTOR_IMAGE:-detector-agent:1.0.0}"
 DETECTOR_FORCE_REBUILD="${DETECTOR_FORCE_REBUILD:-0}"
 
 if [[ "${DETECTOR_FORCE_REBUILD}" == "1" ]]; then

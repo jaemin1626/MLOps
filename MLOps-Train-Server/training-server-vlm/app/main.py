@@ -49,7 +49,7 @@ def create_app() -> Flask:
         return jsonify({
             "status": "ok",
             "workspaceRoot": str(WORKSPACE_ROOT),
-            "service": "intellivix-training-server-vlm",
+            "service": "mlops-training-server-vlm",
             **snapshot,
         })
 

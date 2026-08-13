@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Intellivix_MLops_train_server/docker/save-image.sh
+# mlops-train-server/docker/save-image.sh
 # 다른 서버로 옮길 때: ./save-image.sh 후 생성된 tar 파일을 복사
 
 set -euo pipefail
@@ -13,8 +13,8 @@ if [[ -f "${SCRIPT_DIR}/.env" ]]; then
   set +a
 fi
 
-DETECTOR_IMAGE="${DETECTOR_IMAGE:-intellivix-detector-agent:1.0.0}"
-OUTPUT_FILE="${DETECTOR_IMAGE_EXPORT:-${SCRIPT_DIR}/intellivix-detector-agent.tar.gz}"
+DETECTOR_IMAGE="${DETECTOR_IMAGE:-detector-agent:1.0.0}"
+OUTPUT_FILE="${DETECTOR_IMAGE_EXPORT:-${SCRIPT_DIR}/detector-agent.tar.gz}"
 OUTPUT_FILE="${OUTPUT_FILE//:/_}"
 
 if ! docker image inspect "${DETECTOR_IMAGE}" >/dev/null 2>&1; then

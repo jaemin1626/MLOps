@@ -3,7 +3,7 @@
 학습 서버에 아래 구조로 두고 **sh 파일만 실행**하면 됩니다.
 
 ```text
-Intellivix_MLops_train_server/
+mlops-train-server/
 ├── dataset/
 ├── detector/
 ├── training-server-agent/     # REST API 코드
@@ -21,15 +21,15 @@ Intellivix_MLops_train_server/
     └── load-image.sh
 ```
 
-Intellivix MLOps 저장소에서는 `training-server-deploy/docker/` 내용을  
-학습 서버의 `Intellivix_MLops_train_server/docker/` 로 복사해서 사용합니다.
+MLOps Platform 저장소에서는 `training-server-deploy/docker/` 내용을  
+학습 서버의 `mlops-train-server/docker/` 로 복사해서 사용합니다.
 
 ---
 
 ## 1. 처음 설치 (학습 서버)
 
 ```bash
-cd ~/Workspace/Intellivix_MLops_train_server/docker
+cd ~/Workspace/mlops-train-server/docker
 cp .env.example .env
 chmod +x *.sh
 ./install-all.sh
@@ -57,7 +57,7 @@ chmod +x *.sh
 | `./restart-docker.sh` | 재시작 + **실시간 로그 follow (기본)** |
 | `./logs-docker.sh` | 실행 중 컨테이너 로그만 follow |
 | `./status-docker.sh` | 상태 + health check + 최근 로그 30줄 |
-| `docker logs -f intellivix-detector-agent` | 위 `logs-docker.sh` 와 동일 |
+| `docker logs -f detector-agent` | 위 `logs-docker.sh` 와 동일 |
 
 ---
 
@@ -68,18 +68,18 @@ chmod +x *.sh
 **보내는 서버**
 
 ```bash
-cd ~/Workspace/Intellivix_MLops_train_server/docker
+cd ~/Workspace/mlops-train-server/docker
 ./build-image.sh
 ./save-image.sh
-# 생성: intellivix-detector-agent.tar.gz
+# 생성: detector-agent.tar.gz
 ```
 
 **받는 서버**
 
 ```bash
-# Intellivix_MLops_train_server/training-server-agent + Intellivix_MLops_train_server/docker + tar 파일 복사
-cd ~/Workspace/Intellivix_MLops_train_server/docker
-./load-image.sh intellivix-detector-agent.tar.gz
+# mlops-train-server/training-server-agent + mlops-train-server/docker + tar 파일 복사
+cd ~/Workspace/mlops-train-server/docker
+./load-image.sh detector-agent.tar.gz
 cp .env.example .env
 ./run-docker.sh
 ```
@@ -88,7 +88,7 @@ cp .env.example .env
 
 ```bash
 # training-server-agent + docker 폴더만 복사
-cd ~/Workspace/Intellivix_MLops_train_server/docker
+cd ~/Workspace/mlops-train-server/docker
 cp .env.example .env
 ./install-all.sh
 ```
@@ -98,8 +98,8 @@ cp .env.example .env
 ## 4. .env 설정
 
 ```bash
-DETECTOR_IMAGE=intellivix-detector-agent:1.0.0
-DETECTOR_CONTAINER=intellivix-detector-agent
+DETECTOR_IMAGE=detector-agent:1.0.0
+DETECTOR_CONTAINER=detector-agent
 AGENT_PORT=9010
 DETECTOR_GPU_DEVICE=0          # GPU 없으면 빈 값
 DETECTOR_NETWORK_MODE=host
@@ -118,7 +118,7 @@ MLOps 서버 설정:
 ```
 
 ```bash
-docker restart intellivix-mlops
+docker restart mlops-server
 ```
 
 ---
@@ -136,14 +136,14 @@ MLOps에서 ONNX Export 실패(`invalid int value: '512,896'`)가 나면 **학�
 **MLOps 호스트에서 agent 코드 동기화 + 원격 재빌드**
 
 ```bash
-cd ~/intellivix-mlops
+cd ~/mlops-server
 MLOPS_AGENT_REBUILD=1 bash docker/sync-training-agent.sh
 ```
 
 **학습 서버에서 직접**
 
 ```bash
-cd ~/Workspace/Intellivix_MLops_train_server/docker
+cd ~/Workspace/mlops-train-server/docker
 ./build-image.sh
 ./restart-docker.sh
 ```
@@ -165,7 +165,7 @@ DETECTOR_GPU_DEVICE=0
 
 # nvidia-container-toolkit 설치 후
 bash restart-docker.sh
-docker exec intellivix-detector-agent python -c "import torch; print(torch.cuda.is_available())"
+docker exec detector-agent python -c "import torch; print(torch.cuda.is_available())"
 ```
 
 `False`이면 host Docker GPU 설정을 확인하세요.
@@ -174,6 +174,6 @@ docker exec intellivix-detector-agent python -c "import torch; print(torch.cuda.
 
 ## 7. 주의
 
-- `docker build`는 **`Intellivix_MLops_train_server` 루트를 context**로 사용합니다. (`build-image.sh`가 처리)
-- workspace 데이터는 **volume mount** (`Intellivix_MLops_train_server` → `/workspace`) 로 유지됩니다.
+- `docker build`는 **`mlops-train-server` 루트를 context**로 사용합니다. (`build-image.sh`가 처리)
+- workspace 데이터는 **volume mount** (`mlops-train-server` → `/workspace`) 로 유지됩니다.
 - Docker 컨테이너 안에서는 conda를 쓰지 않습니다 (`USE_CONDA=0`).

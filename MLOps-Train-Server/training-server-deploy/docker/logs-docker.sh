@@ -13,7 +13,7 @@ if [[ -f "${SCRIPT_DIR}/.env" ]]; then
   set +a
 fi
 
-DETECTOR_CONTAINER="${DETECTOR_CONTAINER:-intellivix-detector-agent}"
+DETECTOR_CONTAINER="${DETECTOR_CONTAINER:-detector-agent}"
 
 echo "=== 실시간 agent 로그 (${DETECTOR_CONTAINER}) ==="
 echo "REST 대기 / 명령 접수 / 수행 로그가 여기에 표시됩니다."

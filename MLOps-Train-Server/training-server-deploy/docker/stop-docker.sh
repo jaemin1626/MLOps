@@ -13,7 +13,7 @@ if [[ -f "${SCRIPT_DIR}/.env" ]]; then
   set +a
 fi
 
-DETECTOR_CONTAINER="${DETECTOR_CONTAINER:-intellivix-detector-agent}"
+DETECTOR_CONTAINER="${DETECTOR_CONTAINER:-detector-agent}"
 
 docker rm -f "${DETECTOR_CONTAINER}" >/dev/null 2>&1 || true
 echo "stopped: ${DETECTOR_CONTAINER}"

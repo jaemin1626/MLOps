@@ -31,7 +31,7 @@ def log_request(method: str, path: str, remote_addr: str, status_code: int | Non
 
 
 def log_startup(host: str, port: int, workspace_root: str, supported_commands: list[str]) -> None:
-    agent_log("Intellivix VLM Training Server Agent 시작")
+    agent_log("MLOps VLM Training Server Agent 시작")
     agent_log(f"workspace: {workspace_root}")
     agent_log(f"REST API 대기 중: http://{host}:{port}")
     agent_log(f"health check: http://127.0.0.1:{port}/api/v1/health")

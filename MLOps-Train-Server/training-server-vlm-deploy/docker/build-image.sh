@@ -6,7 +6,7 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "${SCRIPT_DIR}/paths.sh"
 resolve_vlm_docker_paths "${BASH_SOURCE[0]}"
 
-VLM_IMAGE="${VLM_IMAGE:-intellivix-vlm-agent:1.0.0}"
+VLM_IMAGE="${VLM_IMAGE:-vlm-agent:1.0.0}"
 VLM_FORCE_REBUILD="${VLM_FORCE_REBUILD:-0}"
 
 if [[ "${VLM_FORCE_REBUILD}" == "1" ]]; then

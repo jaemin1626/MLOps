@@ -1,4 +1,4 @@
-# Intellivix VLM Training Server Agent
+# MLOps VLM Training Server Agent
 
 Qwen VL 모델 LoRA/Full fine-tuning REST agent (포트 **9011**).
 
