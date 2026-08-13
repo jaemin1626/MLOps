@@ -76,7 +76,7 @@ const server = http.createServer(async (request, response) => {
 
 const listenPort = Number(process.env.PORT || runtimeConfig.server.port);
 server.listen(listenPort, runtimeConfig.server.host, () => {
-  console.log(`Intellivix MLOps: http://localhost:${listenPort}`);
+  console.log(`MLOps Platform: http://localhost:${listenPort}`);
   console.log(
     `Execution mode: data=${runtimeConfig.data.executionMode}, training=${runtimeConfig.training.executionMode}, models=${runtimeConfig.models.executionMode}, export=${runtimeConfig.export.executionMode}`,
   );

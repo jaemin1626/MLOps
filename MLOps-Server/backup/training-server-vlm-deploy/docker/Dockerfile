@@ -1,7 +1,7 @@
 FROM pytorch/pytorch:2.5.1-cuda12.4-cudnn9-runtime
 
-LABEL org.opencontainers.image.title="Intellivix VLM Training Server Agent" \
-      org.opencontainers.image.description="REST API agent for Qwen VL fine-tuning on Intellivix workspace"
+LABEL org.opencontainers.image.title="MLOps VLM Training Server Agent" \
+      org.opencontainers.image.description="REST API agent for Qwen VL fine-tuning on MLOps workspace"
 
 WORKDIR /app
 

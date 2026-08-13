@@ -14,7 +14,7 @@ if ! getent passwd "${RUNTIME_UID}" >/dev/null 2>&1; then
 fi
 
 if [[ "$(id -u)" -eq 0 && "${RUNTIME_UID}" != "0" ]]; then
-  exec runuser -u "${RUNTIME_USER}" -- node server/intellivix-mlops-server.js
+  exec runuser -u "${RUNTIME_USER}" -- node server/mlops-server.js
 fi
 
-exec node server/intellivix-mlops-server.js
+exec node server/mlops-server.js

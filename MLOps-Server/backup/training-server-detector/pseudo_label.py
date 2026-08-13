@@ -145,7 +145,7 @@ def pseudo_label_images(
 
 
 def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Intellivix pseudo labeling")
+    parser = argparse.ArgumentParser(description="MLOps pseudo labeling")
     parser.add_argument("--weights", required=True)
     parser.add_argument("--image", action="append", dest="images", default=[])
     parser.add_argument("--conf", type=float, default=0.25)

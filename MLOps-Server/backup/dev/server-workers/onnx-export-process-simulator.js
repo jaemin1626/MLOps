@@ -25,7 +25,7 @@ const timer = setInterval(() => {
   if (index >= lines.length) {
     clearInterval(timer);
     fs.mkdirSync(path.dirname(output), { recursive: true });
-    fs.writeFileSync(output, `INTELLIVIX DEMO ONNX\nsource=${source}\nopset=${opset}\n`, 'utf8');
+    fs.writeFileSync(output, `MLOPS DEMO ONNX\nsource=${source}\nopset=${opset}\n`, 'utf8');
     setTimeout(() => process.exit(0), 100);
   }
 }, 450);

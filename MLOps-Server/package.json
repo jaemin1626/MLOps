@@ -1,16 +1,16 @@
 {
-  "name": "intellivix-mlops",
+  "name": "mlops-server",
   "version": "1.1.0",
   "private": true,
-  "description": "Single-user, file-based Intellivix MLOps dashboard without accounts, a database, or external runtime packages.",
-  "main": "server/intellivix-mlops-server.js",
+  "description": "Single-user, file-based MLOps Platform dashboard without accounts, a database, or external runtime packages.",
+  "main": "server/mlops-server.js",
   "scripts": {
-    "start": "node server/intellivix-mlops-server.js",
-    "dev": "node --watch server/intellivix-mlops-server.js",
+    "start": "node server/mlops-server.js",
+    "dev": "node --watch server/mlops-server.js",
     "test": "node backup/dev/tests/backend-smoke-test.js",
     "docker:up": "docker compose up --detach --build",
     "docker:down": "docker compose down",
-    "docker:logs": "docker compose logs --follow --tail=200 intellivix-mlops",
+    "docker:logs": "docker compose logs --follow --tail=200 mlops-server",
     "docker:status": "docker compose ps"
   },
   "engines": {

@@ -13,7 +13,7 @@ if [[ -f "${SCRIPT_DIR}/.env" ]]; then
   set +a
 fi
 
-TRAIN_CONTAINER="${TRAIN_CONTAINER:-intellivix-train-agent}"
+TRAIN_CONTAINER="${TRAIN_CONTAINER:-detector-agent}"
 
 docker rm -f "${TRAIN_CONTAINER}" >/dev/null 2>&1 || true
 echo "stopped: ${TRAIN_CONTAINER}"

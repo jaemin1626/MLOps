@@ -40,12 +40,12 @@ mkdir -p \
 
 docker compose up --detach --build
 
-CONTAINER_PORT="$(docker compose port intellivix-mlops 8080 2>/dev/null || true)"
+CONTAINER_PORT="$(docker compose port mlops-server 8080 2>/dev/null || true)"
 if [[ -n "${CONTAINER_PORT}" ]]; then
-  echo "Intellivix MLOps가 실행되었습니다: http://localhost:${CONTAINER_PORT##*:}"
+  echo "MLOps Platform가 실행되었습니다: http://localhost:${CONTAINER_PORT##*:}"
 else
-  echo "Intellivix MLOps가 실행되었습니다: http://localhost:${MLOPS_HOST_PORT}"
+  echo "MLOps Platform가 실행되었습니다: http://localhost:${MLOPS_HOST_PORT}"
 fi
 
 echo "상태 확인: docker compose ps"
-echo "로그 확인: ./docker/view-intellivix-mlops-docker-logs.sh"
+echo "로그 확인: ./docker/view-mlops-server-docker-logs.sh"

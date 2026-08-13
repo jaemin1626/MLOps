@@ -11,10 +11,10 @@ cp config/mlops-connection.example.json config/mlops-connection.json
 # 2. connection.json 만 환경에 맞게 수정
 
 # 3. Docker 이미지 빌드 및 실행
-bash run-intellivix-mlops.sh
+bash run-mlops.sh
 ```
 
-`run-intellivix-mlops.sh` 가 connection 설정을 읽어 포트, dataset 경로, SSH, agent URL, 컨테이너 내부 경로를 자동 구성합니다.
+`run-mlops.sh` 가 connection 설정을 읽어 포트, dataset 경로, SSH, agent URL, 컨테이너 내부 경로를 자동 구성합니다.
 
 ## 수정할 항목 (`mlops-connection.json`)
 
@@ -29,7 +29,7 @@ bash run-intellivix-mlops.sh
 | | `workspaceRoot` | agent 컨테이너 내부 workspace (보통 `/workspace`) |
 | `vlmTrainingServer` | `agentPort` | (선택) VLM agent 포트, 기본 9011 · host는 trainingServer 와 동일 |
 | `ssh` | `host`, `user`, `password` | dataset/weights sync, ONNX SSH |
-| | `remoteWorkspaceRoot` | 학습 서버 workspace 경로 (예: `/path/to/Intellivix_MLops_train_server`) |
+| | `remoteWorkspaceRoot` | 학습 서버 workspace 경로 (예: `/path/to/mlops-train-server`) |
 
 ### 자동으로 채워지는 값
 
@@ -56,7 +56,7 @@ bash run-intellivix-mlops.sh
     "host": "YOUR_TRAINING_SERVER_IP",
     "user": "YOUR_SSH_USER",
     "password": "YOUR_SSH_PASSWORD",
-    "remoteWorkspaceRoot": "/path/to/Intellivix_MLops_train_server"
+    "remoteWorkspaceRoot": "/path/to/mlops-train-server"
   }
 }
 ```
@@ -73,7 +73,7 @@ bash run-intellivix-mlops.sh
 
 ```bash
 export MLOPS_CONNECTION_FILE=/path/to/my-connection.json
-bash run-intellivix-mlops.sh
+bash run-mlops.sh
 ```
 
 ## Docker vs 호스트 실행

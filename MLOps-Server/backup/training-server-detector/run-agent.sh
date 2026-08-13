@@ -31,7 +31,7 @@ fi
 source .venv-agent/bin/activate
 pip install -q -r requirements.txt
 
-export WORKSPACE_ROOT="${WORKSPACE_ROOT:-/path/to/Intellivix_MLops_train_server}"
+export WORKSPACE_ROOT="${WORKSPACE_ROOT:-/path/to/mlops-train-server}"
 export AGENT_HOST AGENT_PORT
 
 echo "Training Server Agent: http://${AGENT_HOST}:${AGENT_PORT}"

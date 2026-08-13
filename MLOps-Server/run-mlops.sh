@@ -7,8 +7,8 @@ cd "$SCRIPT_DIR"
 # shellcheck disable=SC1091
 source "${SCRIPT_DIR}/docker/load-mlops-connection.sh"
 
-MLOPS_IMAGE="${MLOPS_IMAGE:-intellivix-mlops:1.1.1}"
-MLOPS_CONTAINER_NAME="${MLOPS_CONTAINER_NAME:-intellivix-mlops}"
+MLOPS_IMAGE="${MLOPS_IMAGE:-mlops-server:1.1.1}"
+MLOPS_CONTAINER_NAME="${MLOPS_CONTAINER_NAME:-mlops-server}"
 MLOPS_UID="${MLOPS_UID:-$(id -u)}"
 MLOPS_GID="${MLOPS_GID:-$(id -g)}"
 MLOPS_FORCE_SYNC="${MLOPS_FORCE_SYNC:-0}"
@@ -126,11 +126,11 @@ if [[ -z "${MLOPS_SSH_PASSWORD:-}" ]]; then
   echo "경고: ssh.password 가 비어 있습니다. config/mlops-connection.json 을 확인하세요." >&2
 fi
 
-echo "Intellivix MLOps 실행: http://localhost:${MLOPS_HOST_PORT}"
+echo "MLOps Platform 실행: http://localhost:${MLOPS_HOST_PORT}"
 echo "배포 설정 (이 파일만 수정): ${MLOPS_CONNECTION_FILE}"
 echo "학습 서버 agent: ${MLOPS_TRAINING_SERVER_URL}"
 echo "workspace (MLOps jobs): ${MLOPS_WORKSPACE_PATH} -> /app/workspace"
-echo "dataset (Intellivix_MLops_train_server):   ${MLOPS_DATA_ROOT} -> /workspace/dataset"
+echo "dataset (mlops-train-server):   ${MLOPS_DATA_ROOT} -> /workspace/dataset"
 echo "학습 서버 workspace:    /workspace (= remoteWorkspaceRoot on training server)"
 echo "종료: Ctrl+C"
 

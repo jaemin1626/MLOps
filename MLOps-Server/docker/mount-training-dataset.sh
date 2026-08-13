@@ -51,4 +51,4 @@ echo "원격 dataset 내용:"
 ls -la "${MLOPS_LOCAL_MOUNT}" | head -20
 echo
 echo "MLOps 실행:"
-echo "  MLOPS_DATA_ROOT=${MLOPS_LOCAL_MOUNT} bash ${PROJECT_ROOT}/run-intellivix-mlops.sh"
+echo "  MLOPS_DATA_ROOT=${MLOPS_LOCAL_MOUNT} bash ${PROJECT_ROOT}/run-mlops.sh"

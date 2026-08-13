@@ -31,7 +31,7 @@ async function requestJson(url, options) {
 }
 
 async function run() {
-  const server = spawn(process.execPath, ['server/intellivix-mlops-server.js'], {
+  const server = spawn(process.execPath, ['server/mlops-server.js'], {
     cwd: projectRoot,
     env: {
       ...process.env,

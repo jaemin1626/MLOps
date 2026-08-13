@@ -22,6 +22,6 @@
     "host": "YOUR_TRAINING_SERVER_IP",
     "user": "YOUR_SSH_USER",
     "password": "YOUR_SSH_PASSWORD",
-    "remoteWorkspaceRoot": "/path/to/Intellivix_MLops_train_server"
+    "remoteWorkspaceRoot": "/path/to/mlops-train-server"
   }
 }

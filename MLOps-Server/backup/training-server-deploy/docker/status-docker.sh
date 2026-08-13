@@ -13,7 +13,7 @@ if [[ -f "${SCRIPT_DIR}/.env" ]]; then
   set +a
 fi
 
-TRAIN_CONTAINER="${TRAIN_CONTAINER:-intellivix-train-agent}"
+TRAIN_CONTAINER="${TRAIN_CONTAINER:-detector-agent}"
 AGENT_PORT="${AGENT_PORT:-9010}"
 HEALTH_URL="http://127.0.0.1:${AGENT_PORT}/api/v1/health"
 

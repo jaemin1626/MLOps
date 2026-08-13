@@ -1,12 +1,12 @@
-name: intellivix-mlops
+name: mlops-server
 
 services:
-  intellivix-mlops:
+  mlops-server:
     build:
       context: .
       dockerfile: Dockerfile
-    image: intellivix-mlops:1.1.0
-    container_name: intellivix-mlops
+    image: mlops-server:1.1.1
+    container_name: mlops-server
     init: true
     restart: unless-stopped
     user: "${MLOPS_UID:-1000}:${MLOPS_GID:-1000}"

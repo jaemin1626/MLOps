@@ -1,8 +1,8 @@
-# Intellivix MLOps web application container image.
+# MLOps Platform web application container image.
 FROM node:22-bookworm-slim
 
-LABEL org.opencontainers.image.title="Intellivix MLOps" \
-      org.opencontainers.image.description="File-based Intellivix MLOps web application" \
+LABEL org.opencontainers.image.title="MLOps Platform" \
+      org.opencontainers.image.description="File-based MLOps Platform web application" \
       org.opencontainers.image.version="1.1.1"
 
 ENV NODE_ENV=production \

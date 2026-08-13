@@ -82,7 +82,7 @@ def log_callback_error(task_id: str, error: Exception) -> None:
 
 
 def log_startup(host: str, port: int, workspace_root: str, supported_commands: list[str]) -> None:
-    agent_log("Intellivix Training Server Agent 시작")
+    agent_log("MLOps Training Server Agent 시작")
     if CONNECTION_ID:
         agent_log(f"connection_id: {CONNECTION_ID}")
     if MONITORING_SERVER:

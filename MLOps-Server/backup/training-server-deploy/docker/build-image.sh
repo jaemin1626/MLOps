@@ -6,7 +6,7 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "${SCRIPT_DIR}/paths.sh"
 resolve_training_docker_paths "${BASH_SOURCE[0]}"
 
-TRAIN_IMAGE="${TRAIN_IMAGE:-intellivix-train-agent:1.0.0}"
+TRAIN_IMAGE="${TRAIN_IMAGE:-detector-agent:1.0.0}"
 TRAIN_FORCE_REBUILD="${TRAIN_FORCE_REBUILD:-0}"
 
 if [[ "${TRAIN_FORCE_REBUILD}" == "1" ]]; then

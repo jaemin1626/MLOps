@@ -1,29 +1,29 @@
-# Intellivix MLOps Docker 실행 가이드
+# MLOps Platform Docker 실행 가이드
 
-이 문서는 Intellivix MLOps 웹 애플리케이션을 Docker Compose로 실행하는 방법을 설명합니다.
+이 문서는 MLOps Platform 웹 애플리케이션을 Docker Compose로 실행하는 방법을 설명합니다.
 
 ## 1. 구성 파일
 
 ```text
-intellivix-mlops/
+mlops-server/
 ├── Dockerfile
 ├── compose.yaml
 ├── .dockerignore
 ├── config/
 │   └── mlops-runtime-config.docker.json
 └── docker/
-    ├── intellivix-mlops-docker.env.example
-    ├── start-intellivix-mlops-docker.sh
-    ├── stop-intellivix-mlops-docker.sh
-    ├── view-intellivix-mlops-docker-logs.sh
-    └── check-intellivix-mlops-docker-status.sh
+    ├── mlops-server-docker.env.example
+    ├── start-mlops-server-docker.sh
+    ├── stop-mlops-server-docker.sh
+    ├── view-mlops-server-docker-logs.sh
+    └── check-mlops-server-docker-status.sh
 ```
 
 - `Dockerfile`: Node.js 기반 MLOps 애플리케이션 이미지를 생성합니다.
 - `compose.yaml`: 포트, 볼륨, 환경 변수, Health Check 및 재시작 정책을 정의합니다.
 - `.dockerignore`: 이미지 빌드에 불필요한 파일을 제외합니다.
 - `mlops-runtime-config.docker.json`: 컨테이너 내부 경로와 학습 Agent 주소를 정의합니다.
-- `intellivix-mlops-docker.env.example`: 호스트 포트와 마운트 경로 설정 예시입니다.
+- `mlops-server-docker.env.example`: 호스트 포트와 마운트 경로 설정 예시입니다.
 - Docker Shell Script: 시작, 중지, 로그 조회 및 상태 확인 명령을 제공합니다.
 
 ## 2. 사전 요구사항
@@ -37,7 +37,7 @@ intellivix-mlops/
 프로젝트 폴더에서 다음 명령을 실행합니다.
 
 ```bash
-./docker/start-intellivix-mlops-docker.sh
+./docker/start-mlops-server-docker.sh
 ```
 
 스크립트는 다음 작업을 수행합니다.
@@ -61,7 +61,7 @@ http://localhost:18088
 환경 설정 예시 파일을 프로젝트 루트의 `.env`로 복사합니다.
 
 ```bash
-cp docker/intellivix-mlops-docker.env.example .env
+cp docker/mlops-server-docker.env.example .env
 ```
 
 `.env` 예시:
@@ -112,7 +112,7 @@ MLOps 화면에서 추가로 탐색하거나 태깅할 외부 데이터 폴더�
 예시:
 
 ```dotenv
-MLOPS_EXTERNAL_DATA_PATH=/data/intellivix/training-dataset
+MLOPS_EXTERNAL_DATA_PATH=/data/mlops/training-dataset
 ```
 
 MLOps 데이터 불러오기 또는 태깅 화면에서 다음 경로를 입력합니다.
@@ -124,7 +124,7 @@ MLOps 데이터 불러오기 또는 태깅 화면에서 다음 경로를 입력�
 ## 5. 컨테이너 상태 확인
 
 ```bash
-./docker/check-intellivix-mlops-docker-status.sh
+./docker/check-mlops-server-docker-status.sh
 ```
 
 또는 다음 명령을 사용합니다.
@@ -138,19 +138,19 @@ docker compose ps
 ## 6. 로그 확인
 
 ```bash
-./docker/view-intellivix-mlops-docker-logs.sh
+./docker/view-mlops-server-docker-logs.sh
 ```
 
 또는:
 
 ```bash
-docker compose logs --follow --tail=200 intellivix-mlops
+docker compose logs --follow --tail=200 mlops-server
 ```
 
 ## 7. 중지 및 제거
 
 ```bash
-./docker/stop-intellivix-mlops-docker.sh
+./docker/stop-mlops-server-docker.sh
 ```
 
 이 명령은 컨테이너와 Compose 네트워크를 제거합니다.
@@ -172,7 +172,7 @@ docker compose down
 재시작:
 
 ```bash
-docker compose restart intellivix-mlops
+docker compose restart mlops-server
 ```
 
 ## 9. 실제 학습 서버 Agent 연동
@@ -212,7 +212,7 @@ Agent가 다른 서버에서 실행 중이면 해당 서버 주소로 변경합�
 설정 변경 후 컨테이너를 재시작합니다.
 
 ```bash
-docker compose restart intellivix-mlops
+docker compose restart mlops-server
 ```
 
 ## 10. GPU 사용 범위

@@ -19,7 +19,7 @@ from torch.utils.data import Dataset
 
 
 def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Qwen VL fine-tuning for Intellivix MLOps")
+    parser = argparse.ArgumentParser(description="Qwen VL fine-tuning for MLOps Platform")
     parser.add_argument("--name", required=True, help="Run name")
     parser.add_argument("--dataset", required=True, help="conversations.json path or directory")
     parser.add_argument("--output-dir", required=True, help="Output root directory")

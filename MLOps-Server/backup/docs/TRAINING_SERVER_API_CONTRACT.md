@@ -1,4 +1,4 @@
-# Training Server REST API contract expected by Intellivix MLOps.
+# Training Server REST API contract expected by MLOps Platform.
 # Implement these endpoints on the training server when executionMode is "remote".
 
 ## Health

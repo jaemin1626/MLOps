@@ -1,4 +1,4 @@
-# Intellivix MLOps (모니터링 서버)
+# MLOps Platform (모니터링 서버)
 
 학습 서버와 분리된 **모니터링·오케스트레이션** 웹 애플리케이션입니다.  
 dataset 동기화, 학습/Export job 제출, 모델 목록·로그 모니터링을 담당합니다.
@@ -9,7 +9,7 @@ dataset 동기화, 학습/Export job 제출, 모델 목록·로그 모니터링�
 cp config/mlops-connection.example.json config/mlops-connection.json
 # connection.json 만 환경에 맞게 수정
 
-bash run-intellivix-mlops.sh
+bash run-mlops.sh
 ```
 
 접속: `http://localhost:18088` (포트는 `mlops-connection.json` 의 `mlopsHost.port`)
@@ -59,7 +59,7 @@ bash backup/docker/sync-training-agent.sh
 ## Docker / Compose
 
 ```bash
-./docker/start-intellivix-mlops-docker.sh
+./docker/start-mlops-server-docker.sh
 # 또는
 docker compose up --build
 ```

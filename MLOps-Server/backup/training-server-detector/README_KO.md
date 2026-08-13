@@ -7,13 +7,13 @@
 MLOps 저장소의 `training-server-agent/` 폴더를 학습 서버에 복사합니다.
 
 ```bash
-scp -r training-server-agent YOUR_SSH_USER@YOUR_TRAINING_SERVER_IP:/path/to/Intellivix_MLops_train_server/
+scp -r training-server-agent YOUR_SSH_USER@YOUR_TRAINING_SERVER_IP:/path/to/mlops-train-server/
 ```
 
 학습 서버에서 기대하는 workspace 구조:
 
 ```text
-/path/to/Intellivix_MLops_train_server/
+/path/to/mlops-train-server/
 ├── dataset/
 │   └── integrated/          # 이미지 + txt 라벨 + classes.txt
 ├── detector/
@@ -37,7 +37,7 @@ pip install ultralytics flask requests pyyaml
 ## 3. Agent 실행
 
 ```bash
-cd /path/to/Intellivix_MLops_train_server/training-server-agent
+cd /path/to/mlops-train-server/training-server-agent
 cp .env.example .env
 chmod +x run-agent.sh
 ./run-agent.sh
@@ -47,7 +47,7 @@ chmod +x run-agent.sh
 아래 중 **하나**로 실행하세요.
 
 ```bash
-cd /path/to/Intellivix_MLops_train_server/training-server-agent
+cd /path/to/mlops-train-server/training-server-agent
 python start.py
 # 또는
 python -m app.main
@@ -84,16 +84,16 @@ MLOps가 보내는 body:
   "args": [
     "train_detector.py",
     "--name", "Detector_YOLO_Training",
-    "--dataset", "/path/to/Intellivix_MLops_train_server/dataset/integrated",
-    "--output-dir", "/path/to/Intellivix_MLops_train_server/detector/runs",
-    "--data-config", "/path/to/Intellivix_MLops_train_server/detector/configs/data.yaml",
-    "--model", "/path/to/Intellivix_MLops_train_server/detector/weights/yolo26l.pt",
+    "--dataset", "/path/to/mlops-train-server/dataset/integrated",
+    "--output-dir", "/path/to/mlops-train-server/detector/runs",
+    "--data-config", "/path/to/mlops-train-server/detector/configs/data.yaml",
+    "--model", "/path/to/mlops-train-server/detector/weights/yolo26l.pt",
     "--epochs", "5"
   ],
   "callbackUrl": "http://YOUR_MONITORING_SERVER_IP:18088/api/training/jobs/train_20260807_abc123/callback",
   "parameters": {
     "datasetConfigYaml": "# Ultralytics ...\npath: ...\nnames:\n  0: person\n",
-    "datasetConfigAbsolutePath": "/path/to/Intellivix_MLops_train_server/detector/configs/data.yaml"
+    "datasetConfigAbsolutePath": "/path/to/mlops-train-server/detector/configs/data.yaml"
   }
 }
 ```
@@ -119,21 +119,21 @@ Agent 동작 순서:
 컨테이너 재시작:
 
 ```bash
-docker restart intellivix-mlops
+docker restart mlops-server
 ```
 
 ## 6. systemd 등록 (선택)
 
 ```ini
 [Unit]
-Description=Intellivix Training Server Agent
+Description=MLOps Training Server Agent
 After=network.target
 
 [Service]
 Type=simple
 User=YOUR_SSH_USER
-WorkingDirectory=/path/to/Intellivix_MLops_train_server/training-server-agent
-ExecStart=/path/to/Intellivix_MLops_train_server/training-server-agent/run-agent.sh
+WorkingDirectory=/path/to/mlops-train-server/training-server-agent
+ExecStart=/path/to/mlops-train-server/training-server-agent/run-agent.sh
 Restart=always
 
 [Install]
@@ -159,9 +159,9 @@ Ultralytics YOLO 래퍼입니다. Agent가 `--data-config` yaml과 weights 경�
 conda activate yolo
 python train_detector.py \
   --name test_run \
-  --dataset /path/to/Intellivix_MLops_train_server/dataset/integrated \
-  --output-dir /path/to/Intellivix_MLops_train_server/detector/runs \
-  --model /path/to/Intellivix_MLops_train_server/detector/weights/yolo26l.pt \
-  --data-config /path/to/Intellivix_MLops_train_server/detector/configs/data.yaml \
+  --dataset /path/to/mlops-train-server/dataset/integrated \
+  --output-dir /path/to/mlops-train-server/detector/runs \
+  --model /path/to/mlops-train-server/detector/weights/yolo26l.pt \
+  --data-config /path/to/mlops-train-server/detector/configs/data.yaml \
   --epochs 1 --batch-size 4 --device 0
 ```

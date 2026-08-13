@@ -8,7 +8,7 @@ from ultralytics import YOLO
 
 
 def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Intellivix YOLO detector training wrapper")
+    parser = argparse.ArgumentParser(description="MLOps YOLO detector training wrapper")
     parser.add_argument("--name", required=True)
     parser.add_argument("--dataset", required=True, help="Dataset root directory")
     parser.add_argument("--output-dir", required=True)

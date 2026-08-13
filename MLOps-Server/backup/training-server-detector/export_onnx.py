@@ -40,7 +40,7 @@ def parse_img_size(value: str) -> tuple[int, int] | int:
 
 
 def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Intellivix YOLO26 E-NMS ONNX export")
+    parser = argparse.ArgumentParser(description="MLOps YOLO26 E-NMS ONNX export")
     parser.add_argument("--weights", required=True, help="Source .pt weights path")
     parser.add_argument("--output", required=True, help="Target .onnx output path")
     parser.add_argument("--img-size", default="512,896", help="Image size as N or H,W")

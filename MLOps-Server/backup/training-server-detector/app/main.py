@@ -59,7 +59,7 @@ def create_app() -> Flask:
         body = {
             "status": "ok",
             "workspaceRoot": str(WORKSPACE_ROOT),
-            "service": "intellivix-training-server-detector",
+            "service": "mlops-training-server-detector",
             "exportOnnxVersion": EXPORT_ONNX_VERSION,
             **snapshot,
         }

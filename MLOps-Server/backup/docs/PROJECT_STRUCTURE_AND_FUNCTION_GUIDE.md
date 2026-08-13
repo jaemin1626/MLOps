@@ -1,26 +1,26 @@
-# Intellivix MLOps 폴더·파일·함수 설명서
+# MLOps Platform 폴더·파일·함수 설명서
 
 이 문서는 프로젝트의 폴더, 파일 역할과 주요 함수의 동작을 한 곳에서 확인할 수 있도록 작성한 개발 안내서입니다.
 
 ## 1. 전체 구조
 
 ```text
-intellivix-mlops/
+mlops-server/
 ├── Dockerfile
 ├── compose.yaml
 ├── .dockerignore
 ├── package.json
 ├── README_KO.md
-├── run-intellivix-mlops.sh
+├── run-mlops.sh
 ├── config/
 │   ├── mlops-runtime-config.json
 │   └── mlops-runtime-config.docker.json
 ├── docker/
-│   ├── intellivix-mlops-docker.env.example
-│   ├── start-intellivix-mlops-docker.sh
-│   ├── stop-intellivix-mlops-docker.sh
-│   ├── view-intellivix-mlops-docker-logs.sh
-│   └── check-intellivix-mlops-docker-status.sh
+│   ├── mlops-server-docker.env.example
+│   ├── start-mlops-server-docker.sh
+│   ├── stop-mlops-server-docker.sh
+│   ├── view-mlops-server-docker-logs.sh
+│   └── check-mlops-server-docker-status.sh
 ├── docs/
 │   ├── PROJECT_STRUCTURE_AND_FUNCTION_GUIDE.md
 │   ├── DOCKER_EXECUTION_GUIDE_KO.md
@@ -46,7 +46,7 @@ intellivix-mlops/
 │       ├── model-list-page-controller.js
 │       └── model-export-page-controller.js
 ├── server/
-│   ├── intellivix-mlops-server.js
+│   ├── mlops-server.js
 │   ├── routes/
 │   │   └── mlops-api-router.js
 │   ├── services/
@@ -90,7 +90,7 @@ Node.js 프로젝트 정보와 실행 및 테스트 명령을 정의합니다. �
 - `npm run docker:logs`: Docker 로그 실시간 확인
 - `npm run docker:status`: Docker Compose 상태 확인
 
-### `run-intellivix-mlops.sh`
+### `run-mlops.sh`
 
 외부 패키지 설치 없이 Node.js 내장 모듈만으로 서버를 실행하는 Linux용 시작 스크립트입니다.
 
@@ -100,7 +100,7 @@ Node.js 22 Bookworm Slim 기반 애플리케이션 이미지를 생성합니다.
 
 ### `compose.yaml`
 
-Intellivix MLOps 컨테이너의 빌드, 포트, Bind Mount, 환경 변수, Health Check, 재시작 정책과 보안 옵션을 정의합니다.
+MLOps Platform 컨테이너의 빌드, 포트, Bind Mount, 환경 변수, Health Check, 재시작 정책과 보안 옵션을 정의합니다.
 
 ### `.dockerignore`
 
@@ -141,23 +141,23 @@ Docker 실행 전용 설정입니다. `/app/workspace`를 영구 작업 경로�
 
 ## 4. Docker 실행 파일
 
-### `docker/intellivix-mlops-docker.env.example`
+### `docker/mlops-server-docker.env.example`
 
 호스트 공개 포트, UID/GID, Workspace 경로, 외부 데이터 경로와 시간대 환경 변수 예시입니다. 프로젝트 루트의 `.env`로 복사하여 사용합니다.
 
-### `docker/start-intellivix-mlops-docker.sh`
+### `docker/start-mlops-server-docker.sh`
 
 Docker 및 Compose를 확인하고, 현재 UID/GID와 필요한 작업 폴더를 준비한 뒤 이미지를 빌드하고 컨테이너를 실행합니다.
 
-### `docker/stop-intellivix-mlops-docker.sh`
+### `docker/stop-mlops-server-docker.sh`
 
 `docker compose down`을 실행하여 컨테이너와 Compose 네트워크를 종료합니다. Bind Mount 데이터는 삭제하지 않습니다.
 
-### `docker/view-intellivix-mlops-docker-logs.sh`
+### `docker/view-mlops-server-docker-logs.sh`
 
-Intellivix MLOps 컨테이너의 최근 로그부터 실시간으로 출력합니다.
+MLOps Platform 컨테이너의 최근 로그부터 실시간으로 출력합니다.
 
-### `docker/check-intellivix-mlops-docker-status.sh`
+### `docker/check-mlops-server-docker-status.sh`
 
 Compose 서비스 상태와 컨테이너 Health 상태를 출력합니다.
 
@@ -279,7 +279,7 @@ API 및 페이지 오류를 Console과 Toast에 표시합니다.
 
 ## 6. 백엔드 Entry Point와 Route
 
-### `server/intellivix-mlops-server.js`
+### `server/mlops-server.js`
 
 Node.js 내장 `http` 모듈 기반 서버 Entry Point입니다.
 

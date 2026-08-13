@@ -39,7 +39,7 @@ function request(port, method, urlPath, body = null, headers = {}) {
 
 async function main() {
   process.chdir(PROJECT_ROOT);
-  const { server, runtimeConfig } = require('../../server/intellivix-mlops-server');
+  const { server, runtimeConfig } = require('../../server/mlops-server');
   const port = Number(process.env.PORT || runtimeConfig.server.port || 18088);
   await new Promise((resolve) => setTimeout(resolve, 500));
 

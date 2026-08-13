@@ -567,7 +567,7 @@ class TrainingJobService {
     fs.mkdirSync(modelDirectory, { recursive: true });
     const modelFile = path.join(modelDirectory, `${safeModelName}.pt`);
     if (!fs.existsSync(modelFile)) {
-      fs.writeFileSync(modelFile, `INTELLIVIX DEMO MODEL\nsource_job=${metadata.id}\n`, 'utf8');
+      fs.writeFileSync(modelFile, `MLOPS DEMO MODEL\nsource_job=${metadata.id}\n`, 'utf8');
     }
     writeJsonFileAtomic(path.join(modelDirectory, 'model-metadata.json'), {
       modelName: metadata.name,

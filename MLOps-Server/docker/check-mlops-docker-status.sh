@@ -7,7 +7,7 @@ cd "${PROJECT_ROOT}"
 
 docker compose ps
 
-CONTAINER_ID="$(docker compose ps --quiet intellivix-mlops)"
+CONTAINER_ID="$(docker compose ps --quiet mlops-server)"
 if [[ -n "${CONTAINER_ID}" ]]; then
   docker inspect --format='health={{if .State.Health}}{{.State.Health.Status}}{{else}}not-configured{{end}} status={{.State.Status}}' "${CONTAINER_ID}"
 fi

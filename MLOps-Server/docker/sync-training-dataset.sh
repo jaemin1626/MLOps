@@ -20,7 +20,7 @@ fi
 
 mkdir -p "${MLOPS_LOCAL_DATA_PATH}" 2>/dev/null || true
 if [[ ! -w "${MLOPS_LOCAL_DATA_PATH}" || ! -O "${MLOPS_LOCAL_DATA_PATH}" ]]; then
-  echo "오류: ${MLOPS_LOCAL_DATA_PATH}에 쓸 수 없습니다. run-intellivix-mlops.sh로 실행하세요." >&2
+  echo "오류: ${MLOPS_LOCAL_DATA_PATH}에 쓸 수 없습니다. run-mlops.sh로 실행하세요." >&2
   exit 1
 fi
 
