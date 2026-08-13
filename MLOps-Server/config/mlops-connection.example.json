@@ -1,16 +1,16 @@
 {
-  "_comment": "배포 시 이 파일만 수정하세요. cp mlops-connection.example.json mlops-connection.json",
+  "_comment": "배포 시: cp mlops-connection.example.json mlops-connection.json 후 YOUR_* 값을 환경에 맞게 입력하세요.",
   "mlopsHost": {
     "port": 18088,
     "gpuDevice": "0",
     "publicBaseUrl": "http://YOUR_MONITORING_SERVER_IP:18088",
-    "dataRoot": "./cache/ailab2-dataset",
+    "dataRoot": "./cache/training-dataset",
     "workspacePath": "./workspace",
     "syncOnStart": true,
     "timezone": "Asia/Seoul"
   },
   "trainingServer": {
-    "host": "172.16.8.60",
+    "host": "YOUR_TRAINING_SERVER_IP",
     "agentPort": 9010,
     "authToken": "",
     "workspaceRoot": "/workspace"
@@ -19,9 +19,9 @@
     "agentPort": 9011
   },
   "ssh": {
-    "host": "172.16.8.60",
-    "user": "ailab2",
-    "password": "your-password-here",
-    "remoteWorkspaceRoot": "/home/ailab2/Workspace/MLops_test"
+    "host": "YOUR_TRAINING_SERVER_IP",
+    "user": "YOUR_SSH_USER",
+    "password": "YOUR_SSH_PASSWORD",
+    "remoteWorkspaceRoot": "/path/to/Intellivix_MLops_train_server"
   }
 }

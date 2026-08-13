@@ -35,10 +35,10 @@ resolve_training_docker_paths() {
     echo "오류: training-server-detector 폴더를 찾지 못했습니다." >&2
     echo "  docker 경로: ${DOCKER_DIR}" >&2
     echo "  아래 구조 중 하나를 사용하세요:" >&2
-    echo "    MLops_test/training-server-detector/" >&2
-    echo "    MLops_test/docker/" >&2
-    echo "    MLops_test/training-server-deploy/docker/" >&2
-    echo "  또는 .env 에 MLOPS_WORKSPACE_ROOT=/home/ailab2/Workspace/MLops_test 설정" >&2
+    echo "    Intellivix_MLops_train_server/training-server-detector/" >&2
+    echo "    Intellivix_MLops_train_server/docker/" >&2
+    echo "    Intellivix_MLops_train_server/training-server-deploy/docker/" >&2
+    echo "  또는 .env 에 MLOPS_WORKSPACE_ROOT=/path/to/Intellivix_MLops_train_server 설정" >&2
     return 1
   fi
 

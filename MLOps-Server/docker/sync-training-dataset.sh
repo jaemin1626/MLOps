@@ -6,7 +6,7 @@ PROJECT_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
 # shellcheck disable=SC1091
 source "${PROJECT_ROOT}/docker/load-mlops-connection.sh"
 
-MLOPS_LOCAL_DATA_PATH="${MLOPS_DATA_ROOT:-${MLOPS_LOCAL_DATA_PATH:-${PROJECT_ROOT}/cache/ailab2-dataset}}"
+MLOPS_LOCAL_DATA_PATH="${MLOPS_DATA_ROOT:-${MLOPS_LOCAL_DATA_PATH:-${PROJECT_ROOT}/cache/training-dataset}}"
 
 if [[ -z "${MLOPS_SSH_PASSWORD:-}" ]]; then
   echo "오류: ssh.password 가 설정되지 않았습니다 (config/mlops-connection.json 확인)." >&2

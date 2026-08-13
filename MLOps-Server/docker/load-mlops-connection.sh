@@ -48,7 +48,7 @@ if not api_base and host:
 if not vlm_api_base and vlm_host:
     vlm_api_base = f"http://{vlm_host}:{vlm_port}"
 
-remote_workspace = str(ssh.get("remoteWorkspaceRoot") or "/home/ailab2/Workspace/MLops_test").rstrip("/")
+remote_workspace = str(ssh.get("remoteWorkspaceRoot") or "").rstrip("/")
 remote_dataset = str(ssh.get("remoteDatasetPath") or f"{remote_workspace}/dataset").rstrip("/")
 public_base = str(mlops.get("publicBaseUrl") or f"http://127.0.0.1:{mlops_port}").rstrip("/")
 
@@ -57,7 +57,7 @@ pairs = {
     "MLOPS_HOST_PORT": str(mlops_port),
     "MLOPS_GPU_DEVICE": str(mlops.get("gpuDevice") or ""),
     "MLOPS_PUBLIC_BASE_URL": public_base,
-    "MLOPS_DATA_ROOT": str(mlops.get("dataRoot") or "./cache/ailab2-dataset"),
+    "MLOPS_DATA_ROOT": str(mlops.get("dataRoot") or "./cache/training-dataset"),
     "MLOPS_WORKSPACE_PATH": str(mlops.get("workspacePath") or "./workspace"),
     "MLOPS_SYNC_ON_START": "0" if mlops.get("syncOnStart") is False else "1",
     "TZ": str(mlops.get("timezone") or "Asia/Seoul"),
@@ -66,7 +66,7 @@ pairs = {
     "MLOPS_VLM_TRAINING_SERVER_URL": vlm_api_base.rstrip("/"),
     "MLOPS_TRAINING_SERVER_TOKEN": str(training.get("authToken") or ""),
     "MLOPS_SSH_HOST": str(ssh.get("host") or host),
-    "MLOPS_SSH_USER": str(ssh.get("user") or "ailab2"),
+    "MLOPS_SSH_USER": str(ssh.get("user") or ""),
     "MLOPS_SSH_PASSWORD": str(ssh.get("password") or ""),
     "MLOPS_SSH_REMOTE_WORKSPACE_ROOT": remote_workspace,
     "MLOPS_SSH_REMOTE_PATH": remote_dataset,

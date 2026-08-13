@@ -1,0 +1,26 @@
+# Local secrets (never commit)
+**/.env
+!**/.env.example
+**/config/mlops-connection.json
+
+# Runtime data
+**/cache/
+**/workspace/
+**/.mlops-agent/
+**/.mlops-vlm-agent/
+
+# Accidental git config dumps
+er.name*
+
+# Dataset & large artifacts
+**/dataset/*
+!**/dataset/.gitkeep
+**/*.pt
+**/*.onnx
+**/*.tar
+**/*.tar.gz
+
+# OS / editor
+.DS_Store
+.idea/
+.vscode/

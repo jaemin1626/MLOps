@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# MLops_test/docker/load-image.sh
+# Intellivix_MLops_train_server/docker/load-image.sh
 # Usage: ./load-image.sh [intellivix-train-agent.tar.gz]
 
 set -euo pipefail

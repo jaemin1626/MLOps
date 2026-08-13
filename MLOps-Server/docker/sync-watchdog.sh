@@ -6,7 +6,7 @@ PROJECT_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
 # shellcheck disable=SC1091
 source "${PROJECT_ROOT}/docker/load-mlops-connection.sh"
 
-MLOPS_DATA_ROOT="${MLOPS_DATA_ROOT:-${PROJECT_ROOT}/cache/ailab2-dataset}"
+MLOPS_DATA_ROOT="${MLOPS_DATA_ROOT:-${PROJECT_ROOT}/cache/training-dataset}"
 if [[ "$MLOPS_DATA_ROOT" != /* ]]; then
   MLOPS_DATA_ROOT="${PROJECT_ROOT}/${MLOPS_DATA_ROOT}"
 fi

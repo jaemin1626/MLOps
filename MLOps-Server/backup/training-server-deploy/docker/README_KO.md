@@ -3,7 +3,7 @@
 학습 서버에 아래 구조로 두고 **sh 파일만 실행**하면 됩니다.
 
 ```text
-MLops_test/
+Intellivix_MLops_train_server/
 ├── dataset/
 ├── detector/
 ├── training-server-agent/     # REST API 코드
@@ -22,14 +22,14 @@ MLops_test/
 ```
 
 Intellivix MLOps 저장소에서는 `training-server-deploy/docker/` 내용을  
-학습 서버의 `MLops_test/docker/` 로 복사해서 사용합니다.
+학습 서버의 `Intellivix_MLops_train_server/docker/` 로 복사해서 사용합니다.
 
 ---
 
 ## 1. 처음 설치 (학습 서버)
 
 ```bash
-cd ~/Workspace/MLops_test/docker
+cd ~/Workspace/Intellivix_MLops_train_server/docker
 cp .env.example .env
 chmod +x *.sh
 ./install-all.sh
@@ -68,7 +68,7 @@ chmod +x *.sh
 **보내는 서버**
 
 ```bash
-cd ~/Workspace/MLops_test/docker
+cd ~/Workspace/Intellivix_MLops_train_server/docker
 ./build-image.sh
 ./save-image.sh
 # 생성: intellivix-train-agent.tar.gz
@@ -77,8 +77,8 @@ cd ~/Workspace/MLops_test/docker
 **받는 서버**
 
 ```bash
-# MLops_test/training-server-agent + MLops_test/docker + tar 파일 복사
-cd ~/Workspace/MLops_test/docker
+# Intellivix_MLops_train_server/training-server-agent + Intellivix_MLops_train_server/docker + tar 파일 복사
+cd ~/Workspace/Intellivix_MLops_train_server/docker
 ./load-image.sh intellivix-train-agent.tar.gz
 cp .env.example .env
 ./run-docker.sh
@@ -88,7 +88,7 @@ cp .env.example .env
 
 ```bash
 # training-server-agent + docker 폴더만 복사
-cd ~/Workspace/MLops_test/docker
+cd ~/Workspace/Intellivix_MLops_train_server/docker
 cp .env.example .env
 ./install-all.sh
 ```
@@ -114,7 +114,7 @@ MLOps 서버 설정:
 
 ```json
 "training": { "executionMode": "remote" },
-"trainingServer": { "baseUrl": "http://172.16.8.60:9010" }
+"trainingServer": { "baseUrl": "http://YOUR_TRAINING_SERVER_IP:9010" }
 ```
 
 ```bash
@@ -143,7 +143,7 @@ MLOPS_AGENT_REBUILD=1 bash docker/sync-training-agent.sh
 **학습 서버에서 직접**
 
 ```bash
-cd ~/Workspace/MLops_test/docker
+cd ~/Workspace/Intellivix_MLops_train_server/docker
 ./build-image.sh
 ./restart-docker.sh
 ```
@@ -151,7 +151,7 @@ cd ~/Workspace/MLops_test/docker
 재배포 후 health 확인:
 
 ```bash
-curl -s http://172.16.8.60:9010/api/v1/health | grep exportOnnxVersion
+curl -s http://YOUR_TRAINING_SERVER_IP:9010/api/v1/health | grep exportOnnxVersion
 # "exportOnnxVersion":"4" 이어야 합니다.
 ```
 
@@ -174,6 +174,6 @@ docker exec intellivix-train-agent python -c "import torch; print(torch.cuda.is_
 
 ## 7. 주의
 
-- `docker build`는 **`MLops_test` 루트를 context**로 사용합니다. (`build-image.sh`가 처리)
-- workspace 데이터는 **volume mount** (`MLops_test` → `/workspace`) 로 유지됩니다.
+- `docker build`는 **`Intellivix_MLops_train_server` 루트를 context**로 사용합니다. (`build-image.sh`가 처리)
+- workspace 데이터는 **volume mount** (`Intellivix_MLops_train_server` → `/workspace`) 로 유지됩니다.
 - Docker 컨테이너 안에서는 conda를 쓰지 않습니다 (`USE_CONDA=0`).

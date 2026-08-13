@@ -22,9 +22,12 @@ function getRemoteWorkspaceAbsolutePath(relativePath) {
   if (!normalizedRelativePath) {
     return '';
   }
-  const workspaceRoot = (process.env.MLOPS_SSH_REMOTE_WORKSPACE_ROOT || '/home/ailab2/Workspace/MLops_test')
+  const workspaceRoot = (process.env.MLOPS_SSH_REMOTE_WORKSPACE_ROOT || '')
     .replace(/\\/g, '/')
     .replace(/\/+$/, '');
+  if (!workspaceRoot) {
+    return '';
+  }
   return `${workspaceRoot}/${normalizedRelativePath}`;
 }
 
@@ -39,8 +42,11 @@ function statRemoteWorkspaceFile(relativePath, options = {}) {
     return 0;
   }
 
-  const host = process.env.MLOPS_SSH_HOST || '172.16.8.60';
-  const user = process.env.MLOPS_SSH_USER || 'ailab2';
+  const host = process.env.MLOPS_SSH_HOST || '';
+  const user = process.env.MLOPS_SSH_USER || '';
+  if (!host || !user) {
+    return 0;
+  }
   const remotePath = getRemoteWorkspaceAbsolutePath(normalizedRelativePath);
   const timeoutMs = Number(options.timeoutMs || 15000);
   const remoteCommand = `if [ -f '${remotePath.replace(/'/g, `'\\''`)}' ]; then stat -c%s '${remotePath.replace(/'/g, `'\\''`)}'; else echo 0; fi`;
@@ -82,11 +88,17 @@ function fetchRemoteWorkspaceFileViaSsh(dataRoot, relativePath, options = {}) {
     throw new Error('MLOPS_SSH_PASSWORD가 설정되지 않았습니다.');
   }
 
-  const host = process.env.MLOPS_SSH_HOST || '172.16.8.60';
-  const user = process.env.MLOPS_SSH_USER || 'ailab2';
-  const workspaceRoot = (process.env.MLOPS_SSH_REMOTE_WORKSPACE_ROOT || '/home/ailab2/Workspace/MLops_test')
+  const host = process.env.MLOPS_SSH_HOST || '';
+  const user = process.env.MLOPS_SSH_USER || '';
+  const workspaceRoot = (process.env.MLOPS_SSH_REMOTE_WORKSPACE_ROOT || '')
     .replace(/\\/g, '/')
     .replace(/\/+$/, '');
+  if (!host || !user) {
+    throw new Error('MLOPS_SSH_HOST / MLOPS_SSH_USER가 설정되지 않았습니다. config/mlops-connection.json 을 확인하세요.');
+  }
+  if (!workspaceRoot) {
+    throw new Error('MLOPS_SSH_REMOTE_WORKSPACE_ROOT가 설정되지 않았습니다. config/mlops-connection.json 을 확인하세요.');
+  }
   const remotePath = `${workspaceRoot}/${normalizedRelativePath}`;
   const timeoutMs = Number(options.timeoutMs || 180000);
 

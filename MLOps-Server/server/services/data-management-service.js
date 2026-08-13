@@ -83,7 +83,7 @@ class DataManagementService {
       eventFolders,
       rootStatus,
       hint: rootStatus.isEmpty
-        ? '데이터 root 폴더가 비어 있습니다. 학습 서버(/home/ailab2/Workspace/MLops_test/dataset) 경로가 이 서버에 마운트되었는지 확인하세요.'
+        ? '데이터 root 폴더가 비어 있습니다. config/mlops-connection.json 의 ssh.remoteWorkspaceRoot/dataset 경로가 이 서버에 마운트되었는지 확인하세요.'
         : null,
     };
   }

@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# MLops_test/docker/install-all.sh
+# Intellivix_MLops_train_server/docker/install-all.sh
 # 처음 설치: build + run + health check
 
 set -euo pipefail

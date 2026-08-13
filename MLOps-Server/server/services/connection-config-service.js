@@ -65,7 +65,6 @@ function loadConnectionConfig(options = {}) {
   }, 9011);
   const remoteWorkspaceRoot = pickString(
     ssh.remoteWorkspaceRoot || process.env.MLOPS_SSH_REMOTE_WORKSPACE_ROOT,
-    '/home/ailab2/Workspace/MLops_test',
   ).replace(/\/+$/, '');
 
   cachedConnection = {
@@ -77,7 +76,7 @@ function loadConnectionConfig(options = {}) {
         mlopsHost.publicBaseUrl || process.env.MLOPS_PUBLIC_BASE_URL,
         `http://127.0.0.1:${mlopsPort}`,
       ).replace(/\/$/, ''),
-      dataRoot: pickString(mlopsHost.dataRoot || process.env.MLOPS_DATA_ROOT, './cache/ailab2-dataset'),
+      dataRoot: pickString(mlopsHost.dataRoot || process.env.MLOPS_DATA_ROOT, './cache/training-dataset'),
       workspacePath: pickString(mlopsHost.workspacePath || process.env.MLOPS_WORKSPACE_PATH, './workspace'),
       syncOnStart: mlopsHost.syncOnStart !== false && process.env.MLOPS_SYNC_ON_START !== '0',
       timezone: pickString(mlopsHost.timezone || process.env.TZ, 'Asia/Seoul'),
@@ -113,7 +112,7 @@ function loadConnectionConfig(options = {}) {
     },
     ssh: {
       host: pickString(ssh.host, pickString(trainingServer.host)),
-      user: pickString(ssh.user || process.env.MLOPS_SSH_USER, 'ailab2'),
+      user: pickString(ssh.user || process.env.MLOPS_SSH_USER),
       password: pickString(ssh.password || process.env.MLOPS_SSH_PASSWORD),
       remoteWorkspaceRoot,
       remoteDatasetPath: pickString(

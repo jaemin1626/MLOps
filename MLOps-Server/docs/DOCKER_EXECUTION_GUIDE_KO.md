@@ -201,10 +201,10 @@ Agent가 다른 서버에서 실행 중이면 해당 서버 주소로 변경합�
 ```json
 {
   "training": {
-    "agentBaseUrl": "http://192.168.0.50:9010"
+    "agentBaseUrl": "http://YOUR_TRAINING_SERVER_IP:9010"
   },
   "export": {
-    "agentBaseUrl": "http://192.168.0.50:9010"
+    "agentBaseUrl": "http://YOUR_TRAINING_SERVER_IP:9010"
   }
 }
 ```

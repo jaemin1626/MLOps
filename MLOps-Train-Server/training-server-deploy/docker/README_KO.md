@@ -114,7 +114,7 @@ MLOps 서버 설정:
 
 ```json
 "training": { "executionMode": "remote" },
-"trainingServer": { "baseUrl": "http://172.16.8.60:9010" }
+"trainingServer": { "baseUrl": "http://YOUR_TRAINING_SERVER_IP:9010" }
 ```
 
 ```bash
@@ -151,7 +151,7 @@ cd ~/Workspace/Intellivix_MLops_train_server/docker
 재배포 후 health 확인:
 
 ```bash
-curl -s http://172.16.8.60:9010/api/v1/health | grep exportOnnxVersion
+curl -s http://YOUR_TRAINING_SERVER_IP:9010/api/v1/health | grep exportOnnxVersion
 # "exportOnnxVersion":"4" 이어야 합니다.
 ```
 

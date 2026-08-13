@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-MLOPS_LOCAL_MOUNT="${MLOPS_LOCAL_MOUNT:-${HOME}/mnt/ailab2-dataset}"
+MLOPS_LOCAL_MOUNT="${MLOPS_LOCAL_MOUNT:-${HOME}/mnt/training-dataset}"
 
 if mountpoint -q "${MLOPS_LOCAL_MOUNT}" 2>/dev/null; then
   fusermount -u "${MLOPS_LOCAL_MOUNT}" || umount "${MLOPS_LOCAL_MOUNT}"

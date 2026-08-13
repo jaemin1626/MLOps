@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# MLops_test/docker/save-image.sh
+# Intellivix_MLops_train_server/docker/save-image.sh
 # 다른 서버로 옮길 때: ./save-image.sh 후 생성된 tar 파일을 복사
 
 set -euo pipefail

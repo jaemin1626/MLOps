@@ -130,8 +130,8 @@ echo "Intellivix MLOps 실행: http://localhost:${MLOPS_HOST_PORT}"
 echo "배포 설정 (이 파일만 수정): ${MLOPS_CONNECTION_FILE}"
 echo "학습 서버 agent: ${MLOPS_TRAINING_SERVER_URL}"
 echo "workspace (MLOps jobs): ${MLOPS_WORKSPACE_PATH} -> /app/workspace"
-echo "dataset (MLops_test):   ${MLOPS_DATA_ROOT} -> /workspace/dataset"
-echo "학습 서버 workspace:    /workspace (= MLops_test on training server)"
+echo "dataset (Intellivix_MLops_train_server):   ${MLOPS_DATA_ROOT} -> /workspace/dataset"
+echo "학습 서버 workspace:    /workspace (= remoteWorkspaceRoot on training server)"
 echo "종료: Ctrl+C"
 
 exec docker run --rm \

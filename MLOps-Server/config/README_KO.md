@@ -22,14 +22,14 @@ bash run-intellivix-mlops.sh
 |------|------|------|
 | `mlopsHost` | `port` | MLOps 웹 포트 (기본 18088) |
 | | `publicBaseUrl` | **모니터링 서버 IP/도메인** (학습 agent 콜백용) |
-| | `dataRoot` | 로컬 dataset 캐시 (기본 `./cache/ailab2-dataset`) |
+| | `dataRoot` | 로컬 dataset 캐시 (기본 `./cache/training-dataset`) |
 | | `workspacePath` | MLOps job/모델 저장 (기본 `./workspace`) |
 | | `syncOnStart` | 시작 시 학습 서버 dataset 동기화 |
 | `trainingServer` | `host`, `agentPort` | detector agent (기본 9010) |
 | | `workspaceRoot` | agent 컨테이너 내부 workspace (보통 `/workspace`) |
 | `vlmTrainingServer` | `agentPort` | (선택) VLM agent 포트, 기본 9011 · host는 trainingServer 와 동일 |
 | `ssh` | `host`, `user`, `password` | dataset/weights sync, ONNX SSH |
-| | `remoteWorkspaceRoot` | 학습 서버 MLops_test 경로 |
+| | `remoteWorkspaceRoot` | 학습 서버 workspace 경로 (예: `/path/to/Intellivix_MLops_train_server`) |
 
 ### 자동으로 채워지는 값
 
@@ -44,19 +44,19 @@ bash run-intellivix-mlops.sh
 {
   "mlopsHost": {
     "port": 18088,
-    "publicBaseUrl": "http://192.168.1.50:18088",
-    "dataRoot": "./cache/ailab2-dataset",
+    "publicBaseUrl": "http://YOUR_MONITORING_SERVER_IP:18088",
+    "dataRoot": "./cache/training-dataset",
     "workspacePath": "./workspace"
   },
   "trainingServer": {
-    "host": "172.16.8.60",
+    "host": "YOUR_TRAINING_SERVER_IP",
     "agentPort": 9010
   },
   "ssh": {
-    "host": "172.16.8.60",
-    "user": "ailab2",
-    "password": "your-password",
-    "remoteWorkspaceRoot": "/home/ailab2/Workspace/MLops_test"
+    "host": "YOUR_TRAINING_SERVER_IP",
+    "user": "YOUR_SSH_USER",
+    "password": "YOUR_SSH_PASSWORD",
+    "remoteWorkspaceRoot": "/path/to/Intellivix_MLops_train_server"
   }
 }
 ```

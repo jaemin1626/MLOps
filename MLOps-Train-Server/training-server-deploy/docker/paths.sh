@@ -38,7 +38,7 @@ resolve_training_docker_paths() {
     echo "    Intellivix_MLops_train_server/training-server-detector/" >&2
     echo "    Intellivix_MLops_train_server/docker/" >&2
     echo "    Intellivix_MLops_train_server/training-server-deploy/docker/" >&2
-    echo "  또는 .env 에 MLOPS_WORKSPACE_ROOT=/home/ailab2/Workspace/Intellivix_MLops_train_server 설정" >&2
+    echo "  또는 .env 에 MLOPS_WORKSPACE_ROOT=/path/to/Intellivix_MLops_train_server 설정" >&2
     return 1
   fi
 

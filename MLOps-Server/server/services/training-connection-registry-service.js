@@ -106,7 +106,7 @@ class TrainingConnectionRegistryService {
       detector_port: Number(legacy.trainingServer.agentPort || 9010),
       vlm_port: Number(legacy.vlmTrainingServer.agentPort || 9011),
       token,
-      ssh_user: legacy.ssh.user || 'ailab2',
+      ssh_user: legacy.ssh.user || '',
       remote_workspace_root: legacy.ssh.remoteWorkspaceRoot || '',
       remote_dataset_path: legacy.ssh.remoteDatasetPath || '',
       workspace_root: legacy.trainingServer.workspaceRoot || '/workspace',
@@ -199,7 +199,7 @@ class TrainingConnectionRegistryService {
       remote_workspace_root: String(
         input.remote_workspace_root
         || input.ssh?.remoteWorkspaceRoot
-        || '/home/ailab2/Workspace/MLops_test',
+        || '',
       ).replace(/\/+$/, ''),
       remote_dataset_path: String(
         input.remote_dataset_path

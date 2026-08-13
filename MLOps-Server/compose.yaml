@@ -27,7 +27,7 @@ services:
         source: "${MLOPS_WORKSPACE_PATH:-./workspace}"
         target: /app/workspace
       - type: bind
-        source: "${MLOPS_EXTERNAL_DATA_PATH:-./cache/ailab2-dataset}"
+        source: "${MLOPS_EXTERNAL_DATA_PATH:-./cache/training-dataset}"
         target: /workspace/dataset
     extra_hosts:
       - "host.docker.internal:host-gateway"

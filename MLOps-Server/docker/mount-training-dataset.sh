@@ -4,10 +4,15 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
 
-MLOPS_SSH_HOST="${MLOPS_SSH_HOST:-172.16.8.60}"
-MLOPS_SSH_USER="${MLOPS_SSH_USER:-ailab2}"
-MLOPS_SSH_REMOTE_PATH="${MLOPS_SSH_REMOTE_PATH:-/home/ailab2/Workspace/MLops_test/dataset}"
-MLOPS_LOCAL_MOUNT="${MLOPS_LOCAL_MOUNT:-${PROJECT_ROOT}/cache/ailab2-dataset}"
+# shellcheck disable=SC1091
+source "${SCRIPT_DIR}/load-mlops-connection.sh"
+
+MLOPS_LOCAL_MOUNT="${MLOPS_LOCAL_MOUNT:-${MLOPS_DATA_ROOT:-${PROJECT_ROOT}/cache/training-dataset}}"
+
+if [[ -z "${MLOPS_SSH_HOST:-}" || -z "${MLOPS_SSH_USER:-}" || -z "${MLOPS_SSH_REMOTE_PATH:-}" ]]; then
+  echo "오류: SSH 연결 정보가 없습니다. config/mlops-connection.json 을 확인하세요." >&2
+  exit 1
+fi
 
 if ! command -v sshfs >/dev/null 2>&1; then
   echo "오류: sshfs가 설치되어 있지 않습니다." >&2

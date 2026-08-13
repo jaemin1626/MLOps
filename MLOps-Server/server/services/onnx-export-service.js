@@ -365,7 +365,7 @@ class OnnxExportService {
       throw new Error(
         `학습 서버 export_onnx.py v${REQUIRED_EXPORT_ONNX_VERSION}가 준비되지 않았습니다. ${versionHint}${importHint} `
         + 'backup/docker/sync-training-agent.sh 로 agent 재빌드/재시작 후 '
-        + 'curl http://172.16.8.60:9010/api/v1/health | grep exportOnnxVersion 으로 "4"를 확인하세요.',
+        + 'curl http://YOUR_TRAINING_SERVER_IP:9010/api/v1/health | grep exportOnnxVersion 으로 "4"를 확인하세요.',
       );
     }
   }

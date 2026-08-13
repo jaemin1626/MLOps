@@ -585,12 +585,12 @@
               <div class="muted" style="margin-bottom:12px">MLOps 전체에서 <strong>하나의 학습 서버만</strong> 동시에 연결됩니다. 다른 서버로 전환하면 기존 연결은 자동으로 해제됩니다.</div>
               <form id="connectionCreateForm" class="form-grid">
                 <div class="form-field"><label class="form-label" for="connectionNameInput">이름</label><input class="input" id="connectionNameInput" required placeholder="서울시 학습 서버"></div>
-                <div class="form-field"><label class="form-label" for="connectionHostInput">Host</label><input class="input" id="connectionHostInput" required placeholder="192.168.0.101"></div>
+                <div class="form-field"><label class="form-label" for="connectionHostInput">Host</label><input class="input" id="connectionHostInput" required placeholder="YOUR_TRAINING_SERVER_IP"></div>
                 <div class="form-field"><label class="form-label" for="connectionDetectorPortInput">Detector Port</label><input class="input" id="connectionDetectorPortInput" value="9010"></div>
                 <div class="form-field"><label class="form-label" for="connectionVlmPortInput">VLM Port</label><input class="input" id="connectionVlmPortInput" value="9011"></div>
-                <div class="form-field"><label class="form-label" for="connectionSshUserInput">SSH User</label><input class="input" id="connectionSshUserInput" required placeholder="ailab2"></div>
-                <div class="form-field"><label class="form-label" for="connectionSshPasswordInput">SSH Password</label><input class="input" id="connectionSshPasswordInput" type="password" required></div>
-                <div class="form-field full"><label class="form-label" for="connectionRemoteWorkspaceInput">Remote Workspace Root</label><input class="input monospace" id="connectionRemoteWorkspaceInput" placeholder="/home/ailab2/Workspace/MLops_test"></div>
+                <div class="form-field"><label class="form-label" for="connectionSshUserInput">SSH User</label><input class="input" id="connectionSshUserInput" required placeholder="YOUR_SSH_USER"></div>
+                <div class="form-field"><label class="form-label" for="connectionSshPasswordInput">SSH Password</label><input class="input" id="connectionSshPasswordInput" type="password" required placeholder="YOUR_SSH_PASSWORD"></div>
+                <div class="form-field full"><label class="form-label" for="connectionRemoteWorkspaceInput">Remote Workspace Root</label><input class="input monospace" id="connectionRemoteWorkspaceInput" placeholder="/path/to/Intellivix_MLops_train_server"></div>
                 <div class="form-field full"><button class="button primary" type="submit">SSH 인증 후 등록</button></div>
               </form>
             </div>
@@ -657,7 +657,7 @@
         <div class="muted" style="margin-bottom:12px">학습 서버 SSH 계정으로 인증합니다. Password는 저장되지 않습니다.</div>
         <div class="form-grid">
           <div class="form-field"><label class="form-label" for="connectionConnectUserInput">SSH User</label><input class="input" id="connectionConnectUserInput" required></div>
-          <div class="form-field"><label class="form-label" for="connectionConnectPasswordInput">SSH Password</label><input class="input" id="connectionConnectPasswordInput" type="password" required></div>
+          <div class="form-field"><label class="form-label" for="connectionConnectPasswordInput">SSH Password</label><input class="input" id="connectionConnectPasswordInput" type="password" required placeholder="YOUR_SSH_PASSWORD"></div>
           <div class="form-field full"><button type="button" class="button primary" id="connectionConnectConfirmButton" data-mode="connect">인증</button></div>
         </div>
       </div>
