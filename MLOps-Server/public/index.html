@@ -1,0 +1,682 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <title>Intellivix MLOps</title>
+  <link rel="stylesheet" href="styles/mlops-design-tokens.css">
+  <link rel="stylesheet" href="styles/mlops-layout.css">
+  <link rel="stylesheet" href="styles/mlops-components.css?v=1.2.4">
+  <link rel="stylesheet" href="styles/mlops-pages.css?v=1.2.5">
+  <link rel="stylesheet" href="styles/yolo-tagging-canvas.css?v=1.8.0">
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="sidebar-brand">
+        <svg class="icon"><use href="assets/icons/mlops-icons.svg#icon-cloud"></use></svg>
+        <span>Intellivix MLOps</span>
+      </div>
+      <div class="sidebar-scroll">
+        <button class="sidebar-link active" data-page="dashboard-page" data-title="대시보드" data-subtitle="전체 학습 현황 및 주요 지표를 확인합니다.">
+          <svg class="icon"><use href="assets/icons/mlops-icons.svg#icon-home"></use></svg><span>대시보드</span>
+        </button>
+        <div class="sidebar-group-title">데이터 관리</div>
+        <button class="sidebar-link" data-page="data-browser-page" data-title="데이터 불러오기" data-subtitle="연동한 데이터 폴더 구조와 이미지 현황을 확인합니다.">
+          <svg class="icon"><use href="assets/icons/mlops-icons.svg#icon-folder"></use></svg><span>데이터 불러오기</span>
+        </button>
+        <button class="sidebar-link" data-page="tagging-page" data-title="태깅 관리" data-subtitle="YOLO Bounding Box 라벨을 생성하고 자동 저장합니다.">
+          <svg class="icon"><use href="assets/icons/mlops-icons.svg#icon-tag"></use></svg><span>객체 검출 태깅</span>
+        </button>
+        <button class="sidebar-link" data-page="vlm-tagging-page" data-title="이미지 VLM 태깅" data-subtitle="dataset/vlm/{주제}/Images 태깅 후 label JSON에 저장합니다.">
+          <svg class="icon"><use href="assets/icons/mlops-icons.svg#icon-tag"></use></svg><span>이미지 VLM 태깅</span>
+        </button>
+        <div class="sidebar-group-title">학습 관리</div>
+        <button class="sidebar-link" data-page="training-detector-settings-page" data-title="객체 검출기 학습" data-subtitle="YOLO 검출기 학습 파라미터와 실행 명령을 설정합니다.">
+          <svg class="icon"><use href="assets/icons/mlops-icons.svg#icon-settings"></use></svg><span>객체 검출기 학습</span>
+        </button>
+        <button class="sidebar-link" data-page="training-vlm-settings-page" data-title="이미지 VLM 학습" data-subtitle="이미지 VLM 학습 파라미터와 실행 명령을 설정합니다.">
+          <svg class="icon"><use href="assets/icons/mlops-icons.svg#icon-settings"></use></svg><span>이미지 VLM 학습</span>
+        </button>
+        <button class="sidebar-link" data-page="training-monitor-page" data-title="학습 실행 현황" data-subtitle="Epoch, Step, Loss와 실시간 로그를 모니터링합니다.">
+          <svg class="icon"><use href="assets/icons/mlops-icons.svg#icon-play"></use></svg><span>학습 실행 현황</span>
+        </button>
+        <div class="sidebar-group-title">모델 관리</div>
+        <button class="sidebar-link" data-page="model-list-page" data-title="모델 목록" data-subtitle="학습 모델, 가중치, 배포 상태를 한눈에 확인합니다.">
+          <svg class="icon"><use href="assets/icons/mlops-icons.svg#icon-box"></use></svg><span>모델 목록</span>
+        </button>
+        <button class="sidebar-link" data-page="model-export-page" data-title="모델 배포" data-subtitle="PyTorch .pt 모델을 ONNX 형식으로 변환합니다.">
+          <svg class="icon"><use href="assets/icons/mlops-icons.svg#icon-rocket"></use></svg><span>모델 배포</span>
+        </button>
+        <div class="sidebar-group-title">연결 관리</div>
+        <button class="sidebar-link" data-page="connections-page" data-title="Connection 관리" data-subtitle="학습 서버 Connection을 등록하고 상태를 확인합니다.">
+          <svg class="icon"><use href="assets/icons/mlops-icons.svg#icon-settings"></use></svg><span>Connection 관리</span>
+        </button>
+      </div>
+      <div class="sidebar-footer"><svg class="icon"><use href="assets/icons/mlops-icons.svg#icon-terminal"></use></svg><span>파일 기반 단일 운영 환경</span></div>
+    </aside>
+
+    <main class="main-shell">
+      <header class="topbar">
+        <button class="topbar-menu-button" aria-label="메뉴"><svg class="icon"><use href="assets/icons/mlops-icons.svg#icon-menu"></use></svg></button>
+        <div class="page-title-wrap"><h1 class="page-title" id="pageTitle">대시보드</h1><span class="page-subtitle" id="pageSubtitle">전체 학습 현황 및 주요 지표를 확인합니다.</span></div>
+        <div class="topbar-status">
+          <span class="badge green" id="trainingConnectionLabel">학습 서버 확인 중</span>
+          <button class="button small" id="openConnectionsPageButton" type="button">Connection 관리</button>
+          <span class="badge green" id="serverStatusBadge">서버 확인 중</span>
+        </div>
+      </header>
+
+      <div class="content">
+        <section id="dashboard-page" class="page-section active">
+          <div class="metric-grid">
+            <article class="card metric-card"><div><div class="metric-label">진행 중인 학습</div><div class="metric-value"><span id="metricRunning">0</span><span class="metric-unit">건</span></div></div><div class="metric-icon blue"><svg class="icon"><use href="assets/icons/mlops-icons.svg#icon-activity"></use></svg></div></article>
+            <article class="card metric-card"><div><div class="metric-label">완료된 학습</div><div class="metric-value"><span id="metricCompleted">0</span><span class="metric-unit">건</span></div></div><div class="metric-icon green"><svg class="icon"><use href="assets/icons/mlops-icons.svg#icon-check"></use></svg></div></article>
+            <article class="card metric-card"><div><div class="metric-label">검출기 데이터셋</div><div class="metric-value"><span id="metricDetectorDatasets">0</span><span class="metric-unit">개</span></div><div class="muted metric-hint">detector/Images</div></div><div class="metric-icon green"><svg class="icon"><use href="assets/icons/mlops-icons.svg#icon-database"></use></svg></div></article>
+            <article class="card metric-card"><div><div class="metric-label">VLM 데이터셋</div><div class="metric-value"><span id="metricVlmDatasets">0</span><span class="metric-unit">개</span></div><div class="muted metric-hint">vlm/{주제}</div></div><div class="metric-icon purple"><svg class="icon"><use href="assets/icons/mlops-icons.svg#icon-database"></use></svg></div></article>
+            <article class="card metric-card"><div><div class="metric-label">배포된 모델</div><div class="metric-value"><span id="metricExports">0</span><span class="metric-unit">개</span></div><div class="muted metric-hint">모델 목록 · 배포 완료</div></div><div class="metric-icon orange"><svg class="icon"><use href="assets/icons/mlops-icons.svg#icon-rocket"></use></svg></div></article>
+            <article class="card metric-card"><div><div class="metric-label">저장소 사용량</div><div class="metric-value" style="font-size:24px"><span id="metricStorageUsed">-</span><span class="metric-unit" id="metricStorageTotal">/ -</span></div><div class="muted" id="metricStoragePercent" style="margin-top:8px">-</div></div><div class="metric-icon blue"><svg class="icon"><use href="assets/icons/mlops-icons.svg#icon-chart"></use></svg></div></article>
+          </div>
+
+          <div class="dashboard-grid-top">
+            <article class="card">
+              <div class="card-header"><h2 class="card-title">학습 현황 요약</h2><div class="card-actions"><button class="button small" id="dashboardRefreshButton"><svg class="icon"><use href="assets/icons/mlops-icons.svg#icon-refresh"></use></svg>새로고침</button></div></div>
+              <div class="table-wrap"><table class="data-table"><thead><tr><th>학습명</th><th>모델 타입</th><th>시작 시간</th><th>Epoch</th><th>Loss</th><th>진행률</th><th>상태</th></tr></thead><tbody id="dashboardJobTableBody"></tbody></table></div>
+            </article>
+            <article class="card dashboard-log-card">
+              <div class="card-header"><h2 class="card-title">최근 학습 로그</h2><div class="card-actions"><select class="select" id="dashboardLogJobSelect" style="min-width:280px"><option value="">학습 작업을 선택하세요.</option></select></div></div>
+              <div class="card-body"><pre class="console" id="dashboardLatestLog">학습 로그가 없습니다.</pre></div>
+            </article>
+          </div>
+
+          <div class="dashboard-grid-bottom">
+            <article class="card">
+              <div class="card-header"><h2 class="card-title">학습 진행률 분포</h2></div>
+              <div class="card-body status-donut-wrap">
+                <div class="status-donut" id="dashboardDonut"><div class="donut-center"><span>전체</span><strong id="dashboardTotalJobs">0건</strong></div></div>
+                <div class="legend" id="dashboardLegend"></div>
+              </div>
+            </article>
+            <article class="card">
+              <div class="card-header"><h2 class="card-title">최근 배포 이력</h2></div>
+              <div class="table-wrap"><table class="data-table"><thead><tr><th>모델명</th><th>모델 타입</th><th>버전</th><th>원본 .pt</th><th>출력 .onnx</th><th>배포 일시</th><th>상태</th></tr></thead><tbody id="dashboardExportTableBody"></tbody></table></div>
+            </article>
+          </div>
+        </section>
+
+        <section id="data-browser-page" class="page-section">
+          <article class="card" style="margin-bottom:20px"><div class="card-body"><div class="input-row"><input class="input monospace" id="dataRootPathInput" value="/workspace/dataset" placeholder="데이터 폴더 절대 경로" readonly><button class="button primary" id="dataTreeLoadButton"><svg class="icon"><use href="assets/icons/mlops-icons.svg#icon-folder"></use></svg>데이터 불러오기</button><button class="button" id="dataSyncButton"><svg class="icon"><use href="assets/icons/mlops-icons.svg#icon-refresh"></use></svg>학습 서버 동기화</button></div><div class="input-row" style="margin-top:12px"><input class="input" id="eventFolderSearchInput" placeholder="하위 폴더명 검색 (예: Integrated, Jaemin Folder)"><button class="button" id="eventFolderSearchButton"><svg class="icon"><use href="assets/icons/mlops-icons.svg#icon-list"></use></svg>검색</button></div><div class="muted" id="eventFolderSearchHint" style="margin-top:8px">폴더 구조에는 detector/Images와 vlm/{주제}/Images만 표시됩니다. 변경 후에는 학습 서버 동기화 → 데이터 불러오기 순서로 실행하세요.</div></div></article>
+          <div class="workspace-grid">
+            <div class="data-browser-sidebar">
+              <article class="card" style="margin-bottom:20px"><div class="card-header"><h2 class="card-title">하위 폴더</h2><span class="card-subtitle" id="eventFolderCount">0개</span></div><div class="event-folder-list" id="eventFolderList"><div class="muted">데이터 불러오기를 누르면 하위 폴더 목록이 표시됩니다.</div></div></article>
+              <article class="card"><div class="card-header"><h2 class="card-title">폴더 구조</h2></div><div class="folder-tree" id="dataFolderTree"><div class="muted">데이터를 불러오세요.</div></div></article>
+            </div>
+            <article class="card data-browser-main-panel"><div class="card-header"><h2 class="card-title" id="selectedFolderTitle">이미지 현황</h2><div class="card-subtitle monospace" id="selectedFolderPath"></div></div><div class="card-body data-browser-main-body"><div class="summary-grid" id="dataSummaryGrid"></div><div class="data-thumbnail-panel"><div class="thumbnail-grid" id="dataThumbnailGrid"></div></div></div></article>
+          </div>
+        </section>
+
+        <section id="tagging-page" class="page-section">
+          <article class="card" style="margin-bottom:16px">
+            <div class="card-body">
+              <div class="input-row">
+                <button class="button" id="taggingSelectImageFolderButton"><svg class="icon"><use href="assets/icons/mlops-icons.svg#icon-folder"></use></svg>이미지 폴더 선택</button>
+                <button class="button" id="taggingLoadClassesButton"><svg class="icon"><use href="assets/icons/mlops-icons.svg#icon-list"></use></svg>클래스 txt 불러오기</button>
+                <button class="button" id="taggingTogglePseudoPanelButton" aria-expanded="false" aria-controls="taggingPseudoLabelPanel"><svg class="icon"><use href="assets/icons/mlops-icons.svg#icon-rocket"></use></svg>Pseudo Labeling</button>
+              </div>
+              <div class="muted monospace" id="taggingFolderSummaryText" style="margin-top:8px">이미지 폴더를 선택하면 하위 모든 jpg 목록이 표시됩니다. 라벨 txt는 각 이미지와 같은 폴더에 저장됩니다.</div>
+              <div class="form-grid hidden" id="taggingImageFolderPanel" style="margin-top:12px">
+                <div class="form-field full">
+                  <label class="form-label">이미지 폴더 경로 (서버)</label>
+                  <div class="input-row">
+                    <input class="input monospace" id="taggingImageDirectory" value="/workspace/dataset/detector/Images" placeholder="/workspace/dataset/detector/Images/Integrated">
+                    <button class="button primary" id="taggingApplyImagePathButton"><svg class="icon"><use href="assets/icons/mlops-icons.svg#icon-folder"></use></svg>경로 적용</button>
+                    <button class="button" id="taggingBrowseImageFolderButton"><svg class="icon"><use href="assets/icons/mlops-icons.svg#icon-folder"></use></svg>폴더에서 선택</button>
+                  </div>
+                  <div class="muted" style="margin-top:8px">선택한 폴더와 하위 폴더의 jpg/jpeg 이미지를 모두 불러옵니다.</div>
+                </div>
+              </div>
+              <div class="form-grid hidden" id="taggingClassesFilePanel" style="margin-top:12px">
+                <div class="form-field full">
+                  <label class="form-label">불러오기 위치</label>
+                  <div class="tagging-source-tabs">
+                    <label class="tagging-source-tab"><input type="radio" name="taggingClassesSource" value="server" checked> 서버</label>
+                    <label class="tagging-source-tab"><input type="radio" name="taggingClassesSource" value="local"> 로컬 PC</label>
+                  </div>
+                </div>
+                <div class="form-field full" id="taggingClassesServerPanel">
+                  <label class="form-label">클래스 txt 파일 경로 (서버)</label>
+                  <div class="input-row">
+                    <input class="input monospace" id="taggingClassesFilePath" placeholder="/workspace/dataset/detector/class_folder/integrated.txt">
+                    <button class="button primary" id="taggingApplyClassesPathButton"><svg class="icon"><use href="assets/icons/mlops-icons.svg#icon-list"></use></svg>경로 불러오기</button>
+                    <button class="button" id="taggingBrowseClassesButton"><svg class="icon"><use href="assets/icons/mlops-icons.svg#icon-folder"></use></svg>서버에서 선택</button>
+                  </div>
+                </div>
+                <div class="form-field full hidden" id="taggingClassesLocalPanel">
+                  <label class="form-label">클래스 txt 파일 (로컬 PC)</label>
+                  <div class="input-row">
+                    <input class="input" id="taggingClassesLocalFileName" readonly placeholder="txt 파일을 선택하세요">
+                    <label class="button" for="taggingClassesLocalFileInput">파일 선택</label>
+                    <input type="file" id="taggingClassesLocalFileInput" accept=".txt,text/plain" hidden>
+                    <button type="button" class="button primary" id="taggingApplyLocalClassesButton">불러오기</button>
+                  </div>
+                </div>
+                <div class="muted">한 줄에 클래스명 하나(person, ncar 등). 서버 경로를 입력하거나 로컬 PC txt 파일을 선택하세요.</div>
+              </div>
+              <div class="muted" id="taggingSummaryText" style="margin-top:8px">단축키: 0~9 클래스 · G bbox 선택 · 우클릭 bbox 삭제 · ←/→ 또는 A/D 이미지 이동 · Esc 확대 닫기</div>
+              <div class="form-grid hidden tagging-pseudo-panel" id="taggingPseudoLabelPanel" style="margin-top:12px">
+                <div class="form-field full">
+                  <div class="tagging-pseudo-panel-head">
+                    <h3 class="tagging-pseudo-panel-title">Pseudo Labeling</h3>
+                    <span class="muted">학습 서버 GPU에서 YOLO 추론 후 라벨 txt 자동 생성</span>
+                  </div>
+                </div>
+                <div class="form-field full">
+                  <label class="form-label">모델 종류</label>
+                  <div class="tagging-source-tabs">
+                    <label class="tagging-source-tab"><input type="radio" name="taggingPseudoModelSource" value="runs" checked> 학습 결과 (runs/weights)</label>
+                    <label class="tagging-source-tab"><input type="radio" name="taggingPseudoModelSource" value="base"> 기본 weights (detector/weights)</label>
+                  </div>
+                </div>
+                <div class="form-field full" id="taggingPseudoRunsPanel">
+                  <label class="form-label">학습 Run 폴더</label>
+                  <div class="input-row">
+                    <select class="select" id="taggingPseudoRunFolderSelect" style="min-width:280px"><option value="">Run 폴더를 선택하세요.</option></select>
+                    <button type="button" class="button" id="taggingPseudoLoadPtButton">Load</button>
+                  </div>
+                </div>
+                <div class="form-field full" id="taggingPseudoPtPanel">
+                  <label class="form-label">추론 .pt 모델</label>
+                  <select class="select" id="taggingPseudoPtSelect" disabled><option value="">Run Load 후 .pt 파일을 선택하세요.</option></select>
+                </div>
+                <div class="form-field full hidden" id="taggingPseudoBasePanel">
+                  <label class="form-label">기본 weights (.pt)</label>
+                  <select class="select" id="taggingPseudoBaseWeightSelect"><option value="">weights 불러오는 중...</option></select>
+                </div>
+                <div class="form-field"><label class="form-label">Confidence</label><input class="input" type="number" step="0.01" id="taggingPseudoConf" value="0.25" min="0" max="1"></div>
+                <div class="form-field"><label class="form-label">IoU</label><input class="input" type="number" step="0.01" id="taggingPseudoIou" value="0.45" min="0" max="1"></div>
+                <div class="form-field full"><label class="check-label"><input type="checkbox" id="taggingPseudoOverwrite">기존 라벨 덮어쓰기</label></div>
+                <div class="form-field full">
+                  <div class="action-bar">
+                    <button type="button" class="button primary" id="taggingPseudoCurrentButton">현재 이미지</button>
+                    <button type="button" class="button" id="taggingPseudoUnlabeledButton">라벨 없는 이미지 전체</button>
+                    <button type="button" class="button" id="taggingPseudoAllButton">전체 이미지</button>
+                  </div>
+                  <div class="muted" id="taggingPseudoStatus" style="margin-top:10px">모델을 선택한 뒤 pseudo labeling을 실행하세요.</div>
+                </div>
+              </div>
+            </div>
+          </article>
+          <div class="tagging-layout">
+            <article class="card tagging-sidebar"><div class="card-header"><h2 class="card-title">이미지 목록</h2><span class="card-subtitle" id="taggingImageCount">0장</span></div><div class="tagging-image-list" id="taggingImageList"></div></article>
+            <article class="card tagging-stage-card">
+              <div class="card-header tagging-toolbar">
+                <button class="button small" id="taggingPreviousButton">이전</button><button class="button small" id="taggingNextButton">다음</button><span class="tagging-status" id="taggingPosition">0 / 0</span><span class="spacer"></span><button type="button" class="button small" id="taggingExpandCanvasButton" aria-pressed="false" title="Esc로 닫기">크게 보기</button><select class="select" id="taggingClassSelect" style="width:170px"><option value="0">0 - person</option><option value="1">1 - helmet</option><option value="2">2 - safety_vest</option></select><button class="button small" id="taggingSaveButton"><svg class="icon"><use href="assets/icons/mlops-icons.svg#icon-save"></use></svg>저장</button><button class="button small danger" id="taggingDeleteAllButton"><svg class="icon"><use href="assets/icons/mlops-icons.svg#icon-trash"></use></svg>전체 삭제</button>
+              </div>
+              <div class="tagging-canvas-viewport"><div class="tagging-canvas-wrap"><canvas id="taggingCanvas" width="960" height="540"></canvas></div></div>
+            </article>
+            <article class="card tagging-properties"><div class="card-header"><h2 class="card-title">Bounding Box</h2></div><div class="card-body"><div class="box-list" id="taggingBoxList"><div class="muted">Bounding Box가 없습니다.</div></div><div class="tagging-save-status" id="taggingSaveStatus" aria-live="polite"><span class="tagging-save-status__message">이미지를 선택하세요.</span></div></div></article>
+          </div>
+        </section>
+
+        <section id="vlm-tagging-page" class="page-section">
+          <article class="card" style="margin-bottom:16px">
+            <div class="card-body">
+              <div class="input-row">
+                <button class="button" id="vlmTaggingSelectImageFolderButton"><svg class="icon"><use href="assets/icons/mlops-icons.svg#icon-folder"></use></svg>이미지 폴더 선택</button>
+              </div>
+              <div class="muted monospace" id="vlmTaggingFolderSummaryText" style="margin-top:8px">dataset/vlm/{주제}/Images 이미지를 불러와 dataset/vlm/{주제}/label JSON에 저장합니다.</div>
+              <div class="form-grid hidden" id="vlmTaggingImageFolderPanel" style="margin-top:12px">
+                <div class="form-field full">
+                  <label class="form-label">VLM 이미지 폴더 경로 (서버)</label>
+                  <div class="input-row">
+                    <input class="input monospace" id="vlmTaggingImageDirectory" value="/workspace/dataset/vlm" placeholder="/workspace/dataset/vlm/{주제}/Images">
+                    <button class="button primary" id="vlmTaggingApplyImagePathButton"><svg class="icon"><use href="assets/icons/mlops-icons.svg#icon-folder"></use></svg>경로 적용</button>
+                    <button class="button" id="vlmTaggingBrowseImageFolderButton"><svg class="icon"><use href="assets/icons/mlops-icons.svg#icon-folder"></use></svg>폴더에서 선택</button>
+                  </div>
+                  <div class="muted" style="margin-top:8px">선택한 폴더와 하위 폴더의 이미지를 모두 불러옵니다.</div>
+                </div>
+              </div>
+              <div class="muted" style="margin-top:8px">단축키: ←/→ 이미지 이동 · 라벨링 모드에서만 정답 칸 자동 포커스 · 설명 Enter → 포커스 해제 · Shift+Enter 줄바꿈</div>
+            </div>
+          </article>
+          <div class="tagging-layout vlm-tagging-layout">
+            <article class="card tagging-sidebar">
+              <div class="card-header"><h2 class="card-title">이미지 목록</h2><span class="card-subtitle" id="vlmTaggingImageCount">0장</span></div>
+              <div class="tagging-image-list" id="vlmTaggingImageList"></div>
+            </article>
+            <article class="card vlm-tagging-workspace">
+              <div class="card-header tagging-toolbar">
+                <button class="button small" id="vlmTaggingPreviousButton">이전</button>
+                <button class="button small" id="vlmTaggingNextButton">다음</button>
+                <span class="tagging-status" id="vlmTaggingPosition">0 / 0</span>
+                <div class="vlm-tagging-mode-wrap">
+                  <div class="vlm-tagging-mode-switch is-mode-browse-active" id="vlmTaggingModeSwitch" role="group" aria-label="작업 모드">
+                    <button type="button" class="vlm-tagging-mode-btn is-active" data-mode="browse" id="vlmTaggingModeBrowse">이미지 확인</button>
+                    <button type="button" class="vlm-tagging-mode-btn" data-mode="labeling" id="vlmTaggingModeLabeling">라벨링</button>
+                  </div>
+                  <p class="vlm-tagging-mode-hint">Shift+Ctrl+L 단축키로 변경 가능</p>
+                </div>
+                <span class="spacer"></span>
+                <button class="button small" id="vlmTaggingSaveButton"><svg class="icon"><use href="assets/icons/mlops-icons.svg#icon-save"></use></svg>저장</button>
+              </div>
+              <div class="card-body vlm-tagging-workspace-body">
+                <div class="vlm-tagging-hero-row">
+                  <div class="vlm-tagging-preview-pane">
+                    <img id="vlmTaggingImagePreview" class="vlm-tagging-preview" alt="VLM tagging preview">
+                  </div>
+                  <div class="vlm-tagging-meta-pane">
+                    <div class="vlm-tagging-meta-item">
+                      <label class="form-label">Index</label>
+                      <div class="monospace" id="vlmTaggingRecordIndex">-</div>
+                    </div>
+                    <div class="vlm-tagging-meta-item">
+                      <label class="form-label">Image (상대 경로)</label>
+                      <div class="monospace vlm-tagging-image-path" id="vlmTaggingRecordImagePath">-</div>
+                    </div>
+                    <div class="vlm-tagging-meta-item vlm-tagging-meta-item--prompt">
+                      <div class="vlm-tagging-block-head">
+                        <label class="form-label">Human Prompt</label>
+                        <button type="button" class="button small" id="vlmTaggingApplyPromptButton">기본 프롬프트 적용</button>
+                      </div>
+                      <textarea class="input vlm-tagging-textarea vlm-tagging-textarea--prompt" id="vlmTaggingHumanPrompt" rows="5" placeholder="human 질문 프롬프트"></textarea>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="vlm-tagging-block vlm-tagging-response-block is-answer-empty" id="vlmTaggingResponseBlock">
+                  <div class="vlm-tagging-block-head">
+                    <h3 class="vlm-tagging-block-title">GPT Response</h3>
+                  </div>
+                  <label class="form-label">정답</label>
+                  <div class="vlm-tagging-answer-row">
+                    <div class="vlm-tagging-answer-group" id="vlmTaggingAnswerGroup">
+                      <label class="vlm-tagging-answer-option vlm-tagging-answer-option--yes"><input type="radio" name="vlmTaggingAnswer" value="네"> 네</label>
+                      <label class="vlm-tagging-answer-option vlm-tagging-answer-option--no"><input type="radio" name="vlmTaggingAnswer" value="아니요"> 아니요</label>
+                      <label class="vlm-tagging-answer-option vlm-tagging-answer-option--unknown"><input type="radio" name="vlmTaggingAnswer" value="판단불가"> 판단불가</label>
+                    </div>
+                    <input class="input vlm-tagging-answer-text" id="vlmTaggingAnswerText" placeholder="네, 아니요, 판단불가 또는 직접 입력">
+                  </div>
+                  <label class="form-label">설명</label>
+                  <textarea class="input vlm-tagging-textarea vlm-tagging-textarea--desc" id="vlmTaggingGptDescription" rows="3" placeholder="예: 사람이 바닥에 누워 있으며 움직임이 관찰되지 않습니다. 방호복과 마스크, 장갑을 착용한 상태입니다."></textarea>
+                  <p class="field-hint">저장 형식: <span class="monospace">정답, 설명</span></p>
+                </div>
+
+                <div class="vlm-tagging-block vlm-tagging-json-block">
+                  <div class="vlm-tagging-block-head">
+                    <div>
+                      <h3 class="vlm-tagging-block-title">저장 JSON 미리보기</h3>
+                      <p class="field-hint vlm-tagging-json-path" id="vlmTaggingJsonPreviewPath">dataset/vlm/{주제}/label/conversations.json</p>
+                    </div>
+                  </div>
+                  <pre class="console dark vlm-json-preview" id="vlmTaggingJsonPreview">[
+  /* 이미지를 선택하면 저장 형식이 표시됩니다 */
+]</pre>
+                </div>
+
+                <div class="tagging-status" id="vlmTaggingSaveStatus">이미지를 선택하세요.</div>
+              </div>
+            </article>
+          </div>
+        </section>
+
+        <section id="training-detector-settings-page" class="page-section">
+          <div class="training-type-tabs" role="tablist" aria-label="학습 유형">
+            <button type="button" class="training-type-tab active" data-page="training-detector-settings-page">객체 검출기</button>
+            <button type="button" class="training-type-tab" data-page="training-vlm-settings-page">이미지 VLM</button>
+          </div>
+          <div class="training-layout">
+            <article class="card training-params-card"><div class="card-header training-params-header"><h2 class="card-title">학습 파라미터</h2></div><div class="card-body training-params-body">
+              <form id="trainingDetectorForm" class="training-params-form">
+                <input type="hidden" name="trainingType" value="detector">
+                <nav class="training-step-nav" id="trainingDetectorStepNav" aria-label="학습 설정 단계">
+                  <button type="button" class="training-step is-active" data-step="1">
+                    <span class="training-step-index">1</span>
+                    <span class="training-step-label">공통 학습 설정</span>
+                  </button>
+                  <span class="training-step-divider" aria-hidden="true"></span>
+                  <button type="button" class="training-step" data-step="2" disabled>
+                    <span class="training-step-index">2</span>
+                    <span class="training-step-label">객체 검출기 설정</span>
+                  </button>
+                </nav>
+                <section class="training-params-section training-params-section--common" id="trainingDetectorCommonStep">
+                <h3 class="form-section-title">공통 학습 설정</h3>
+                <div class="form-grid three">
+                  <div class="form-field"><label class="form-label required">학습명</label><input class="input" name="name" value="Detector_YOLO_Training"></div>
+                  <div class="form-field"><label class="form-label">학습 서버</label><input class="input" name="trainingServer" value="-" readonly></div>
+                  <div class="form-field"><label class="form-label">GPU 번호</label><input class="input" name="gpu" value="0" placeholder="0,1"><p class="field-hint">사용할 GPU 번호를 쉼표(,)로 구분해 입력하세요. 예: 0,1</p></div>
+                  <div class="form-field full">
+                    <label class="form-label required">학습 데이터셋</label>
+                    <div class="inline-field-row">
+                      <div class="dataset-folder-picker" id="trainingDatasetPathPicker" role="group" aria-label="학습 데이터셋 폴더">
+                        <p class="muted">dataset 하위 폴더를 불러오는 중...</p>
+                      </div>
+                      <button type="button" class="button" id="trainingDatasetRefreshButton">새로고침</button>
+                    </div>
+                    <p class="field-hint">학습에 사용할 데이터셋 폴더를 하나 이상 선택하세요. 선택한 폴더의 이미지·라벨이 합쳐져 학습됩니다.</p>
+                    <div class="dataset-info-panel" id="trainingDatasetInfoPanel">
+                      <p class="muted">dataset 하위 폴더를 선택하면 정보가 표시됩니다.</p>
+                    </div>
+                  </div>
+                  <div class="form-field full">
+                    <label class="form-label required">학습 결과 저장 경로</label>
+                    <input class="input monospace" name="outputPath" id="trainingOutputPath" placeholder="detector/runs">
+                    <p class="field-hint monospace" id="trainingOutputPathHint"></p>
+                  </div>
+                  <div class="form-field"><label class="form-label required">Epoch</label><input class="input" type="number" name="epochs" value="5" min="1"></div>
+                  <div class="form-field"><label class="form-label required">Batch Size</label><input class="input" type="number" name="batchSize" value="8" min="1"></div>
+                  <div class="form-field"><label class="form-label required">Learning Rate</label><input class="input" type="number" step="0.000001" name="learningRate" value="0.001"></div>
+                </div>
+                <div class="training-step-actions">
+                  <button type="button" class="button primary" id="trainingDetectorNextStepButton">다음: 객체 검출기 설정</button>
+                </div>
+                </section>
+
+                <section id="detectorFields" class="training-params-section training-params-section--detector is-step-hidden">
+                  <div class="training-step-actions training-step-actions--start">
+                    <button type="button" class="button" id="trainingDetectorPrevStepButton">이전: 공통 학습 설정</button>
+                  </div>
+                  <h3 class="form-section-title">객체 검출기 설정</h3>
+                  <div class="form-grid three">
+                    <div class="form-field full">
+                      <label class="form-label required">Pretrained Weights</label>
+                      <div class="inline-field-row">
+                        <select class="select monospace" name="modelPath" id="trainingModelPathSelect">
+                          <option value="">weights 불러오는 중...</option>
+                        </select>
+                        <button type="button" class="button" id="trainingWeightsRefreshButton">새로고침</button>
+                      </div>
+                      <p class="field-hint monospace" id="trainingWeightsRootHint">기본 weights와 학습 runs 폴더의 .pt 파일을 Pretrained로 선택할 수 있습니다.</p>
+                    </div>
+                    <div class="form-field full">
+                      <label class="form-label required">클래스 정의 txt</label>
+                      <textarea class="input class-definition-textarea monospace" name="classDefinitionText" id="trainingClassDefinitionText" placeholder="한 줄에 클래스명 하나씩 입력&#10;person&#10;ncar&#10;scar"></textarea>
+                      <div class="inline-field-row" style="margin-top:8px">
+                        <label class="button" for="trainingClassDefinitionFileInput">로컬 txt 불러오기</label>
+                        <input type="file" id="trainingClassDefinitionFileInput" accept=".txt,text/plain" hidden>
+                        <button type="button" class="button" id="trainingClassDefinitionClearButton">내용 지우기</button>
+                      </div>
+                      <p class="field-hint monospace" id="trainingClassDefinitionPathHint">외부 txt 내용을 붙여넣거나 로컬 파일을 불러오세요. YAML names는 이 내용으로 생성됩니다.</p>
+                    </div>
+                    <div class="form-field full">
+                      <label class="form-label required">Train / Val 경로</label>
+                      <div class="form-grid" style="margin-bottom:8px">
+                        <div class="form-field">
+                          <label class="form-label">Train 경로</label>
+                          <input class="input monospace" name="trainPath" id="trainingTrainPath" placeholder="detector/data/학습명/train.txt">
+                        </div>
+                        <div class="form-field">
+                          <label class="form-label">Val (Test) 경로</label>
+                          <input class="input monospace" name="valPath" id="trainingValPath" placeholder="detector/data/학습명/valid.txt">
+                        </div>
+                      </div>
+                      <div class="inline-field-row">
+                        <button type="button" class="button" id="trainingDatasetSplitButton">9:1 Split 생성</button>
+                        <span class="badge" id="trainingSplitStatus">대기</span>
+                      </div>
+                      <p class="field-hint monospace" id="trainingSplitPathHint">workspace 기준 경로입니다. Split 생성 시 detector/data/{학습명}/train.txt · valid.txt 가 만들어집니다. 동일 이름이 있으면 _2, _3 … 폴더가 생성됩니다.</p>
+                      <pre class="console dark split-log-preview" id="trainingSplitLog">Split 생성 로그가 여기에 표시됩니다.</pre>
+                    </div>
+                    <div class="form-field full">
+                      <label class="form-label">데이터셋 설정 파일</label>
+                      <div class="inline-field-row">
+                        <input class="input monospace" name="datasetConfigPath" id="trainingDatasetConfigPath" placeholder="detector/configs/data.yaml">
+                        <button type="button" class="button button-multiline" id="trainingYamlPreviewButton"><span class="button-multiline__line">YAML</span><span class="button-multiline__line">구조 확인</span></button>
+                      </div>
+                      <p class="field-hint monospace" id="trainingDatasetConfigPathHint"></p>
+                    </div>
+                    <div class="form-field"><label class="form-label">이미지 크기</label><input class="input" type="number" name="imageSize" value="640"></div>
+                    <div class="form-field"><label class="form-label">Optimizer</label><select class="select" name="optimizer"><option>AdamW</option><option>SGD</option><option>Adam</option></select></div>
+                    <div class="form-field"><label class="form-label">Workers</label><input class="input" type="number" name="workers" value="4" min="0"></div>
+                    <div class="form-field full"><div class="check-row"><label class="check-label"><input type="checkbox" name="pretrained" checked>Pretrained 사용</label><label class="check-label"><input type="checkbox" name="resume">Resume 학습</label></div></div>
+                    <div class="form-field full"><label class="form-label">Resume 체크포인트 경로</label><input class="input monospace" name="resumeCheckpoint"></div>
+                  </div>
+                </section>
+              </form>
+            </div></article>
+            <article class="card sticky-card"><div class="card-header"><h2 class="card-title">실행 명령 / YAML 미리보기</h2></div><div class="card-body">
+              <div class="training-step-hint-card" id="trainingCommandPanelStep1Hint">
+                <p class="muted">1단계 <strong>공통 학습 설정</strong>을 완료한 뒤, 2단계 <strong>객체 검출기 설정</strong>에서 YAML과 학습 명령을 확인할 수 있습니다.</p>
+              </div>
+              <div id="trainingCommandPanelContent" class="is-step-hidden">
+                <h3 class="form-section-title">data.yaml 미리보기</h3>
+                <pre class="console dark command-preview yaml-preview" id="trainingYamlPreview">YAML 구조 확인 버튼을 클릭하세요.</pre>
+                <h3 class="form-section-title">학습 명령</h3>
+                <pre class="console dark command-preview" id="trainingCommandPreview">파라미터를 확인한 후 명령 생성을 클릭하세요.</pre>
+                <div class="action-bar"><button class="button" id="trainingPreviewButton">명령 생성</button><button class="button primary" id="trainingStartButton"><svg class="icon"><use href="assets/icons/mlops-icons.svg#icon-play"></use></svg>학습 실행</button></div>
+              </div>
+            </div></article>
+          </div>
+        </section>
+
+        <section id="training-vlm-settings-page" class="page-section">
+          <div class="training-type-tabs" role="tablist" aria-label="학습 유형">
+            <button type="button" class="training-type-tab" data-page="training-detector-settings-page">객체 검출기</button>
+            <button type="button" class="training-type-tab active" data-page="training-vlm-settings-page">이미지 VLM</button>
+          </div>
+          <div class="training-layout">
+            <article class="card training-params-card"><div class="card-header training-params-header"><h2 class="card-title">학습 파라미터</h2></div><div class="card-body training-params-body">
+              <form id="trainingVlmForm" class="training-params-form">
+                <input type="hidden" name="trainingType" value="vlm">
+                <nav class="training-step-nav" id="trainingVlmStepNav" aria-label="학습 설정 단계">
+                  <button type="button" class="training-step is-active" data-step="1">
+                    <span class="training-step-index">1</span>
+                    <span class="training-step-label">공통 학습 설정</span>
+                  </button>
+                  <span class="training-step-divider" aria-hidden="true"></span>
+                  <button type="button" class="training-step" data-step="2" disabled>
+                    <span class="training-step-index">2</span>
+                    <span class="training-step-label">이미지 VLM 설정</span>
+                  </button>
+                </nav>
+                <section class="training-params-section training-params-section--common" id="trainingVlmCommonStep">
+                <h3 class="form-section-title">공통 학습 설정</h3>
+                <div class="form-grid three">
+                  <div class="form-field"><label class="form-label required">학습명</label><input class="input" name="name" value="VLM_Training"></div>
+                  <div class="form-field"><label class="form-label">학습 서버</label><input class="input" name="trainingServer" value="-" readonly></div>
+                  <div class="form-field"><label class="form-label">GPU 번호</label><input class="input" name="gpu" value="0" placeholder="0,1"><p class="field-hint">사용할 GPU 번호를 쉼표(,)로 구분해 입력하세요. 예: 0,1</p></div>
+                  <div class="form-field full">
+                    <label class="form-label required">학습 데이터셋</label>
+                    <div class="inline-field-row">
+                      <div class="dataset-folder-picker" id="trainingVlmDatasetPathPicker" role="group" aria-label="VLM 학습 데이터셋 폴더">
+                        <p class="muted">VLM 주제 폴더를 불러오는 중...</p>
+                      </div>
+                      <button type="button" class="button" id="trainingVlmDatasetRefreshButton">새로고침</button>
+                    </div>
+                    <p class="field-hint">학습에 사용할 VLM 주제 폴더를 하나 이상 선택하세요. 선택한 주제의 Images · label JSON이 합쳐져 학습됩니다.</p>
+                    <div class="dataset-info-panel" id="trainingVlmDatasetInfoPanel">
+                      <p class="muted">dataset/vlm/{주제} 폴더를 선택하면 Images · label 정보가 표시됩니다.</p>
+                    </div>
+                  </div>
+                  <div class="form-field full">
+                    <label class="form-label required">학습 결과 저장 경로</label>
+                    <input class="input monospace" name="outputPath" value="vlm/runs">
+                  </div>
+                  <div class="form-field"><label class="form-label required">Epoch</label><input class="input" type="number" name="epochs" value="3" min="1"></div>
+                  <div class="form-field"><label class="form-label required">Batch Size</label><input class="input" type="number" name="batchSize" value="4" min="1"></div>
+                  <div class="form-field"><label class="form-label required">Learning Rate</label><input class="input" type="number" step="0.000001" name="learningRate" value="0.0001"></div>
+                </div>
+                <div class="training-step-actions">
+                  <button type="button" class="button primary" id="trainingVlmNextStepButton">다음: 이미지 VLM 설정</button>
+                </div>
+                </section>
+                <section id="vlmFields" class="training-params-section training-params-section--vlm is-step-hidden">
+                  <div class="training-step-actions training-step-actions--start">
+                    <button type="button" class="button" id="trainingVlmPrevStepButton">이전: 공통 학습 설정</button>
+                  </div>
+                <h3 class="form-section-title">이미지 VLM 설정</h3>
+                <div class="form-grid three">
+                  <div class="form-field full"><label class="form-label required">Base Model</label><input class="input monospace" name="baseModel" value="Qwen/Qwen3.5-0.8B"></div>
+                  <div class="form-field"><label class="form-label">Gradient Accumulation Steps</label><input class="input" type="number" name="gradientAccumulationSteps" value="4"></div>
+                  <div class="form-field"><label class="form-label">Max Sequence Length</label><input class="input" type="number" name="maxSequenceLength" value="2048"></div>
+                  <div class="form-field"><label class="form-label">Precision</label><select class="select" name="precision"><option>bf16</option><option>fp16</option><option>fp32</option></select></div>
+                  <div class="form-field"><label class="form-label">Optimizer</label><select class="select" name="optimizer"><option>AdamW</option><option>Adam</option><option>SGD</option></select></div>
+                  <div class="form-field full"><div class="check-row"><label class="check-label"><input type="checkbox" name="useLora" checked>LoRA 사용</label><label class="check-label"><input type="checkbox" name="resume">Resume 학습</label></div></div>
+                  <div class="form-field"><label class="form-label">LoRA Rank</label><input class="input" type="number" name="loraRank" value="8"></div>
+                  <div class="form-field"><label class="form-label">LoRA Alpha</label><input class="input" type="number" name="loraAlpha" value="16"></div>
+                  <div class="form-field"><label class="form-label">LoRA Dropout</label><input class="input" type="number" step="0.01" name="loraDropout" value="0.05"></div>
+                  <div class="form-field full"><label class="form-label">Resume 체크포인트 경로</label><input class="input monospace" name="resumeCheckpoint"></div>
+                </div>
+                </section>
+              </form>
+            </div></article>
+            <article class="card sticky-card"><div class="card-header"><h2 class="card-title">실행 명령 미리보기</h2></div><div class="card-body">
+              <div class="training-step-hint-card" id="trainingVlmCommandPanelStep1Hint">
+                <p class="muted">1단계 <strong>공통 학습 설정</strong>을 완료한 뒤, 2단계 <strong>이미지 VLM 설정</strong>에서 학습 명령을 확인할 수 있습니다.</p>
+              </div>
+              <div id="trainingVlmCommandPanelContent" class="is-step-hidden">
+              <pre class="console dark command-preview" id="trainingVlmCommandPreview">파라미터를 확인한 후 명령 생성을 클릭하세요.</pre>
+              <div class="action-bar"><button class="button" id="trainingVlmPreviewButton">명령 생성</button><button class="button primary" id="trainingVlmStartButton"><svg class="icon"><use href="assets/icons/mlops-icons.svg#icon-play"></use></svg>학습 실행</button></div>
+              </div>
+            </div></article>
+          </div>
+        </section>
+
+        <section id="training-monitor-page" class="page-section">
+          <div class="monitor-toolbar"><select class="select" id="trainingJobSelect"><option value="">학습 작업을 선택하세요.</option></select><button class="button danger" id="trainingJobStopButton" disabled>학습 정지</button><button class="button" id="trainingMonitorRefreshButton"><svg class="icon"><use href="assets/icons/mlops-icons.svg#icon-refresh"></use></svg>새로고침</button></div>
+          <article class="card" style="margin-bottom:20px"><div class="card-body"><div class="monitor-summary-grid"><div class="monitor-value"><span>상태</span><strong id="monitorStatus">-</strong></div><div class="monitor-value"><span>Epoch</span><strong id="monitorEpoch">-</strong></div><div class="monitor-value"><span>Step</span><strong id="monitorStep">-</strong></div><div class="monitor-value"><span>Loss</span><strong id="monitorLoss">-</strong></div><div class="monitor-value"><span>경과 시간</span><strong id="monitorElapsed">-</strong></div><div class="monitor-value"><span>진행률</span><strong id="monitorProgressText">-</strong></div></div><div class="progress"><div class="progress-bar" id="monitorProgressBar"></div></div></div></article>
+          <article class="card" style="margin-bottom:20px"><div class="card-header"><h2 class="card-title">실시간 학습 로그</h2></div><div class="card-body"><pre class="console dark" id="trainingLiveLog">학습 작업을 선택하세요.</pre></div></article>
+          <article class="card"><div class="card-header"><h2 class="card-title">전체 학습 현황</h2></div><div class="table-wrap"><table class="data-table"><thead><tr><th>학습명</th><th>모델 유형</th><th>데이터셋</th><th>시작 시간</th><th>Epoch</th><th>Step</th><th>Loss</th><th>진행률</th><th>상태</th></tr></thead><tbody id="trainingJobTableBody"></tbody></table></div><div class="table-footer"><button type="button" class="button small hidden" id="trainingJobLoadMoreButton">더보기</button><button type="button" class="button small hidden" id="trainingJobCollapseButton">접기</button></div></article>
+        </section>
+
+        <section id="model-list-page" class="page-section">
+          <article class="card"><div class="card-header"><h2 class="card-title">모델 목록</h2><div class="card-actions"><button class="button" id="modelListRefreshButton"><svg class="icon"><use href="assets/icons/mlops-icons.svg#icon-refresh"></use></svg>새로고침</button></div></div><div class="table-wrap"><table class="data-table model-list-table"><thead><tr><th>모델명</th><th>유형</th><th>Epoch</th><th>Learning Rate</th><th>대표 가중치</th><th>학습 상태</th><th>배포 상태</th><th>작업</th></tr></thead><tbody id="modelListTableBody"></tbody></table></div></article>
+        </section>
+
+        <section id="model-detail-page" class="page-section">
+          <div class="detail-toolbar"><button type="button" class="button" id="modelDetailBackButton">← 모델 목록</button></div>
+          <article class="card"><div class="card-header"><h2 class="card-title" id="modelDetailTitle">모델 상세</h2><div class="card-actions" id="modelDetailBadges"></div></div><div class="card-body"><div class="detail-summary-grid" id="modelDetailSummary"></div></div></article>
+          <div class="model-detail-layout">
+            <div class="model-detail-top">
+              <article class="card"><div class="card-header"><h2 class="card-title">학습 정보</h2></div><div class="card-body" id="modelDetailTraining"></div></article>
+              <article class="card"><div class="card-header"><h2 class="card-title">가중치</h2></div><div class="card-body" id="modelDetailWeights"></div></article>
+            </div>
+            <article class="card model-detail-deployment-panel"><div class="card-header"><h2 class="card-title">배포 정보</h2></div><div class="card-body" id="modelDetailDeployment"></div></article>
+          </div>
+        </section>
+
+        <section id="model-export-page" class="page-section">
+          <div class="export-layout">
+            <article class="card"><div class="card-header"><h2 class="card-title">ONNX Export 설정</h2></div><div class="card-body"><form id="modelExportForm"><div class="form-grid">
+              <div class="form-field full"><label class="form-label required">가중치 폴더</label><div class="input-row"><select class="select" id="exportRunFolderSelect" style="min-width:280px"><option value="">가중치 폴더를 선택하세요.</option></select><button type="button" class="button" id="exportLoadPtButton">Load</button></div><div class="muted monospace" id="exportRunsRootHint" style="margin-top:8px">workspace 기준 detector/runs 아래 학습 결과 가중치 폴더를 선택합니다.</div></div>
+              <div class="form-field full"><label class="form-label required">원본 .pt 모델</label><select class="select" name="sourcePtPath" id="exportSourceModelSelect" disabled><option value="">가중치 폴더 Load 후 .pt 파일을 선택하세요.</option></select></div>
+              <div class="form-field"><label class="form-label required">출력 ONNX 파일명</label><input class="input" name="outputFileName" value="detector_v1.onnx"></div>
+              <div class="form-field"><label class="form-label">모델 버전</label><input class="input" name="modelVersion" value="v1.0.0"></div>
+              <div class="form-field full"><label class="form-label required">출력 경로</label><input class="input monospace" name="outputDirectory" id="exportOutputDirectory" placeholder="detector/exports" value="detector/exports"></div>
+              <div class="form-field"><label class="form-label">Image Size (H,W)</label><input class="input monospace" name="imgSize" value="512,896" placeholder="512,896"><p class="field-hint">세로, 가로 순서로 입력합니다. 단일 값도 가능합니다.</p></div>
+              <div class="form-field"><label class="form-label">Batch Size</label><input class="input" type="number" name="batchSize" value="1" min="1"></div>
+              <div class="form-field"><label class="form-label">ONNX Opset Version</label><input class="input" type="number" name="opset" value="17" min="7"></div>
+              <div class="form-field"><label class="form-label">Max Detections</label><input class="input" type="number" name="maxDet" value="300" min="1"></div>
+              <div class="form-field"><label class="form-label">Confidence Threshold</label><input class="input" type="number" step="0.01" name="confThres" value="0.25" min="0" max="1"></div>
+              <div class="form-field"><label class="form-label">IoU Threshold</label><input class="input" type="number" step="0.01" name="iouThres" value="0.50" min="0" max="1"></div>
+              <div class="form-field full"><div class="check-row"><label class="check-label"><input type="checkbox" name="end2end" checked>E-NMS (end2end)</label><label class="check-label"><input type="checkbox" name="dynamicBatch" checked>Dynamic Batch</label><label class="check-label"><input type="checkbox" name="simplify" checked>Simplify</label></div><p class="field-hint">E-NMS·Dynamic Batch는 yolov7 all_export.sh E-NMS 섹션과 동일하게 기본 활성화됩니다.</p></div>
+            </div></form></div></article>
+            <article class="card sticky-card"><div class="card-header"><h2 class="card-title">Export 명령 미리보기</h2></div><div class="card-body"><pre class="console dark command-preview" id="exportCommandPreview">모델과 파라미터를 선택한 후 명령 생성을 클릭하세요.</pre><div class="action-bar"><button class="button" id="exportPreviewButton">명령 생성</button><button class="button primary" id="exportStartButton"><svg class="icon"><use href="assets/icons/mlops-icons.svg#icon-rocket"></use></svg>ONNX 배포</button></div></div></article>
+          </div>
+          <article class="card" style="margin-top:20px"><div class="card-header"><h2 class="card-title">최근 ONNX Export 이력</h2></div><div class="table-wrap"><table class="data-table"><thead><tr><th>모델명</th><th>원본 .pt</th><th>출력 .onnx</th><th>배포 일시</th><th>상태</th><th>작업</th></tr></thead><tbody id="exportHistoryTableBody"></tbody></table></div><div class="table-footer"><button type="button" class="button small hidden" id="exportHistoryLoadMoreButton">더보기</button><button type="button" class="button small hidden" id="exportHistoryCollapseButton">접기</button></div></article>
+          <article class="card" style="margin-top:20px"><div class="card-header"><h2 class="card-title">Export 로그</h2><div class="card-actions"><select class="select" id="exportLogSelect" style="min-width:320px"><option value="">작업을 선택하세요.</option></select><a class="button button-multiline hidden" id="exportDownloadButton" href="#"><span class="button-multiline__line">ONNX</span><span class="button-multiline__line">다운로드</span></a></div></div><div class="card-body"><pre class="console dark" id="exportLiveLog">Export 작업을 선택하세요.</pre></div></article>
+        </section>
+
+        <section id="connections-page" class="page-section">
+          <article class="card" style="margin-bottom:20px">
+            <div class="card-header"><h2 class="card-title">학습 서버 연결 등록</h2></div>
+            <div class="card-body">
+              <div class="muted" style="margin-bottom:12px">MLOps 전체에서 <strong>하나의 학습 서버만</strong> 동시에 연결됩니다. 다른 서버로 전환하면 기존 연결은 자동으로 해제됩니다.</div>
+              <form id="connectionCreateForm" class="form-grid">
+                <div class="form-field"><label class="form-label" for="connectionNameInput">이름</label><input class="input" id="connectionNameInput" required placeholder="서울시 학습 서버"></div>
+                <div class="form-field"><label class="form-label" for="connectionHostInput">Host</label><input class="input" id="connectionHostInput" required placeholder="192.168.0.101"></div>
+                <div class="form-field"><label class="form-label" for="connectionDetectorPortInput">Detector Port</label><input class="input" id="connectionDetectorPortInput" value="9010"></div>
+                <div class="form-field"><label class="form-label" for="connectionVlmPortInput">VLM Port</label><input class="input" id="connectionVlmPortInput" value="9011"></div>
+                <div class="form-field"><label class="form-label" for="connectionSshUserInput">SSH User</label><input class="input" id="connectionSshUserInput" required placeholder="ailab2"></div>
+                <div class="form-field"><label class="form-label" for="connectionSshPasswordInput">SSH Password</label><input class="input" id="connectionSshPasswordInput" type="password" required></div>
+                <div class="form-field full"><label class="form-label" for="connectionRemoteWorkspaceInput">Remote Workspace Root</label><input class="input monospace" id="connectionRemoteWorkspaceInput" placeholder="/home/ailab2/Workspace/MLops_test"></div>
+                <div class="form-field full"><button class="button primary" type="submit">SSH 인증 후 등록</button></div>
+              </form>
+            </div>
+          </article>
+          <article class="card">
+            <div class="card-header"><h2 class="card-title">등록된 학습 서버</h2></div>
+            <div class="table-wrap">
+              <table class="data-table">
+                <thead><tr><th>이름</th><th>Agent 상태</th><th>SSH</th><th>작업</th></tr></thead>
+                <tbody id="connectionTableBody"><tr><td colspan="4" class="muted">불러오는 중...</td></tr></tbody>
+              </table>
+            </div>
+          </article>
+        </section>
+      </div>
+      <footer class="footer">© 2026 Intellivix MLOps. File-based internal platform.</footer>
+    </main>
+  </div>
+  <div class="toast-host" id="toastHost"></div>
+
+  <div class="tagging-modal hidden" id="taggingFolderModal" role="dialog" aria-modal="true" aria-labelledby="taggingFolderModalTitle">
+    <div class="tagging-modal-card">
+      <div class="tagging-modal-header">
+        <h3 id="taggingFolderModalTitle">폴더 선택</h3>
+        <button type="button" class="button small" id="taggingFolderModalClose">닫기</button>
+      </div>
+      <div class="tagging-modal-path monospace" id="taggingFolderBrowserPath"></div>
+      <div class="tagging-modal-actions"><button type="button" class="button primary small" id="taggingSelectCurrentFolderButton">현재 폴더 선택</button></div>
+      <div class="tagging-modal-body" id="taggingFolderBrowserList"></div>
+    </div>
+  </div>
+
+  <div class="tagging-modal hidden" id="vlmTaggingFolderModal" role="dialog" aria-modal="true" aria-labelledby="vlmTaggingFolderModalTitle">
+    <div class="tagging-modal-card">
+      <div class="tagging-modal-header">
+        <h3 id="vlmTaggingFolderModalTitle">VLM 이미지 폴더 선택</h3>
+        <button type="button" class="button small" id="vlmTaggingFolderModalClose">닫기</button>
+      </div>
+      <div class="tagging-modal-path monospace" id="vlmTaggingFolderBrowserPath"></div>
+      <div class="tagging-modal-actions"><button type="button" class="button primary small" id="vlmTaggingSelectCurrentFolderButton">현재 폴더 선택</button></div>
+      <div class="tagging-modal-body" id="vlmTaggingFolderBrowserList"></div>
+    </div>
+  </div>
+
+  <div class="tagging-modal hidden" id="taggingClassFileModal" role="dialog" aria-modal="true" aria-labelledby="taggingClassFileModalTitle">
+    <div class="tagging-modal-card">
+      <div class="tagging-modal-header">
+        <h3 id="taggingClassFileModalTitle">클래스 txt 파일 선택</h3>
+        <button type="button" class="button small" id="taggingClassFileModalClose">닫기</button>
+      </div>
+      <div class="tagging-modal-path monospace" id="taggingClassFileBrowserPath"></div>
+      <div class="tagging-modal-body" id="taggingClassFileBrowserList"></div>
+      <div class="muted tagging-modal-hint">한 줄에 클래스명 하나(person, ncar 등). YOLO bbox 형식 txt는 선택할 수 없습니다.</div>
+    </div>
+  </div>
+
+  <div class="tagging-modal hidden" id="connectionConnectModal" role="dialog" aria-modal="true" aria-labelledby="connectionConnectModalTitle">
+    <div class="tagging-modal-card">
+      <div class="tagging-modal-header">
+        <h3 id="connectionConnectModalTitle">SSH 인증</h3>
+        <button type="button" class="button small" id="connectionConnectCloseButton">닫기</button>
+      </div>
+      <div class="card-body">
+        <div class="muted" style="margin-bottom:12px">학습 서버 SSH 계정으로 인증합니다. Password는 저장되지 않습니다.</div>
+        <div class="form-grid">
+          <div class="form-field"><label class="form-label" for="connectionConnectUserInput">SSH User</label><input class="input" id="connectionConnectUserInput" required></div>
+          <div class="form-field"><label class="form-label" for="connectionConnectPasswordInput">SSH Password</label><input class="input" id="connectionConnectPasswordInput" type="password" required></div>
+          <div class="form-field full"><button type="button" class="button primary" id="connectionConnectConfirmButton" data-mode="connect">인증</button></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="scripts/mlops-api-client.js?v=1.2.1"></script>
+  <script src="scripts/connection-store.js?v=1.1.0"></script>
+  <script src="scripts/mlops-formatters.js?v=1.2.2"></script>
+  <script src="scripts/dashboard-page-controller.js?v=1.1.5"></script>
+  <script src="scripts/data-browser-page-controller.js?v=1.1.5"></script>
+  <script src="scripts/yolo-tagging-page-controller.js?v=1.8.1"></script>
+  <script src="scripts/vlm-tagging-page-controller.js?v=1.4.2"></script>
+  <script src="scripts/training-settings-page-controller.js?v=1.10.3"></script>
+  <script src="scripts/training-monitor-page-controller.js?v=1.2.0"></script>
+  <script src="scripts/model-list-page-controller.js?v=1.3.2"></script>
+  <script src="scripts/model-detail-page-controller.js?v=1.2.3"></script>
+  <script src="scripts/model-export-page-controller.js?v=1.2.6"></script>
+  <script src="scripts/connections-page-controller.js?v=1.2.0"></script>
+  <script src="scripts/mlops-app-shell.js?v=1.2.1"></script>
+</body>
+</html>

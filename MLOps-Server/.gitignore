@@ -1,0 +1,21 @@
+# Secrets and local deploy config
+.env
+config/mlops-connection.json
+
+# Runtime data (jobs, models, connection tokens)
+cache/
+workspace/
+
+# OS / editor
+.DS_Store
+*.swp
+*.swo
+.idea/
+.vscode/
+
+# Logs
+*.log
+npm-debug.log*
+
+# Node (if added later)
+node_modules/

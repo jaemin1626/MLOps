@@ -1,0 +1,27 @@
+{
+  "_comment": "배포 시 이 파일만 수정하세요. cp mlops-connection.example.json mlops-connection.json",
+  "mlopsHost": {
+    "port": 18088,
+    "gpuDevice": "0",
+    "publicBaseUrl": "http://YOUR_MONITORING_SERVER_IP:18088",
+    "dataRoot": "./cache/ailab2-dataset",
+    "workspacePath": "./workspace",
+    "syncOnStart": true,
+    "timezone": "Asia/Seoul"
+  },
+  "trainingServer": {
+    "host": "172.16.8.60",
+    "agentPort": 9010,
+    "authToken": "",
+    "workspaceRoot": "/workspace"
+  },
+  "vlmTrainingServer": {
+    "agentPort": 9011
+  },
+  "ssh": {
+    "host": "172.16.8.60",
+    "user": "ailab2",
+    "password": "your-password-here",
+    "remoteWorkspaceRoot": "/home/ailab2/Workspace/MLops_test"
+  }
+}

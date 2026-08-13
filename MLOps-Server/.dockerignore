@@ -1,0 +1,10 @@
+.git
+.gitignore
+node_modules
+npm-debug.log*
+*.zip
+.env
+.env.*
+!docker/intellivix-mlops-docker.env.example
+workspace/jobs/running/*
+workspace/logs/*

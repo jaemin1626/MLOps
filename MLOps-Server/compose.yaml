@@ -1,0 +1,51 @@
+name: intellivix-mlops
+
+services:
+  intellivix-mlops:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: intellivix-mlops:1.1.0
+    container_name: intellivix-mlops
+    init: true
+    restart: unless-stopped
+    user: "${MLOPS_UID:-1000}:${MLOPS_GID:-1000}"
+    ports:
+      - "${MLOPS_HOST_PORT:-18088}:8080"
+    environment:
+      NODE_ENV: production
+      TZ: "${TZ:-Asia/Seoul}"
+      PORT: "8080"
+      MLOPS_RUNTIME_PROFILE: docker
+      MLOPS_CONNECTION_FILE: /app/config/mlops-connection.json
+    volumes:
+      - type: bind
+        source: ./config
+        target: /app/config
+        read_only: true
+      - type: bind
+        source: "${MLOPS_WORKSPACE_PATH:-./workspace}"
+        target: /app/workspace
+      - type: bind
+        source: "${MLOPS_EXTERNAL_DATA_PATH:-./cache/ailab2-dataset}"
+        target: /workspace/dataset
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    read_only: true
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,size=64m
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    stop_grace_period: 15s
+    healthcheck:
+      test:
+        - CMD
+        - node
+        - -e
+        - "fetch('http://127.0.0.1:8080/api/health').then((response) => { if (!response.ok) process.exit(1); }).catch(() => process.exit(1));"
+      interval: 15s
+      timeout: 5s
+      start_period: 10s
+      retries: 5

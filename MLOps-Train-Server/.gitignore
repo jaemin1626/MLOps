@@ -1,0 +1,45 @@
+# --- Local secrets ---
+.env
+**/.env
+!**/.env.example
+
+# --- Dataset (do not commit) ---
+dataset/*
+!dataset/.gitkeep
+
+# --- Training artifacts ---
+detector/runs/
+detector/exports/
+detector/data/
+detector/weights/
+vlm/runs/
+vlm/data/
+vlm/weights/
+
+# --- Agent runtime logs ---
+.mlops-agent/
+.mlops-vlm-agent/
+
+# --- Large model / image files ---
+*.pt
+*.pth
+*.onnx
+*.tar
+*.tar.gz
+*.zip
+*.safetensors
+*.bin
+
+# --- Python ---
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+
+# --- OS / editor ---
+.DS_Store
+*.swp
+*.swo
+.idea/
+.vscode/

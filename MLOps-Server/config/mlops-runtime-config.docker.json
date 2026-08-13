@@ -1,0 +1,4 @@
+{
+  "_comment": "더 이상 수정하지 마세요. 배포 설정은 config/mlops-connection.json 만 편집합니다.",
+  "_optionalOverride": "고급 설정만 바꿀 때 MLOPS_CONFIG_FILE 로 이 파일을 지정할 수 있습니다."
+}

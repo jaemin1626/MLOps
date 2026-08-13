@@ -1,0 +1,35 @@
+{
+  "server": {
+    "host": "0.0.0.0",
+    "port": 8080
+  },
+  "data": {
+    "executionMode": "local"
+  },
+  "models": {
+    "executionMode": "local"
+  },
+  "training": {
+    "executionMode": "remote",
+    "requestTimeoutMs": 30000,
+    "detectorEntryPoint": "python train_detector.py",
+    "vlmEntryPoint": "python train_vlm.py",
+    "workspaceRoot": "/workspace",
+    "weightsRoot": "detector/weights",
+    "configsRoot": "detector/configs",
+    "runsRoot": "detector/runs",
+    "datasetPath": "detector/Images/Integrated",
+    "dataListsRoot": "detector/data"
+  },
+  "export": {
+    "executionMode": "remote",
+    "requestTimeoutMs": 30000,
+    "onnxEntryPoint": "python export_onnx.py",
+    "outputRoot": "detector/exports"
+  },
+  "scan": {
+    "maximumTreeDepth": 4,
+    "maximumFilesPerFolder": 5000,
+    "recentItemLimit": 8
+  }
+}
