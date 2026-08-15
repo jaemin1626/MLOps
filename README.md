@@ -9,9 +9,7 @@ Detector / VLM 학습을 웹 UI에서 관리하는 통합 MLOps 플랫폼입니�
 | **MLOps-Server** | 모니터링 UI, dataset sync, 학습/Export 요청 | `mlops-server:1.1.1` |
 | **MLOps-Train-Server** | Detector / VLM REST agent (학습 실행) | `detector-agent:1.0.0`, `vlm-agent:1.0.0` |
 
-> **tar는 선택** — 소스에서 Docker 이미지를 직접 빌드할 수 있습니다.  
 > **deploy 폴더는 필수** — 컨테이너 실행 스크립트가 포함되어 있습니다.
-
 ---
 
 ## 저장소 구조
